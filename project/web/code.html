@@ -1,0 +1,627 @@
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Generalidades de la Web | UFPS Portal Educativo</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=Montserrat:wght@600;700;800;900&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#AA1916", // UFPS Red
+                        secondary: "#0F1115", // Rich Black/Charcoal
+                        "content-bg": "#FFFFFF",
+                    },
+                    fontFamily: {
+                        display: ["Montserrat", "sans-serif"],
+                        sans: ["Inter", "sans-serif"],
+                    },
+                },
+            },
+        };
+    </script>
+    <!-- Estilos Personalizados (No-Tailwind) -->
+    <style>
+        .divider-diagonal {
+            clip-path: polygon(0 0, 100% 5%, 100% 100%, 0 95%);
+        }
+
+        /* Barra de desplazamiento */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background-color: #0F1115;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: rgba(170, 25, 22, 0.4);
+            border-radius: 9999px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background-color: #AA1916;
+        }
+
+        .hero-overlay {
+            background: linear-gradient(to right, rgba(15, 17, 21, 0.98) 40%, rgba(170, 25, 22, 0.2) 100%);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+
+<body class="bg-secondary font-sans selection:bg-primary selection:text-white">
+    <div class="flex h-screen overflow-hidden">
+        <aside class="w-72 bg-secondary flex flex-col z-50 border-r border-white/5 shrink-0 shadow-2xl">
+            <div class="p-8">
+                <div class="flex items-center space-x-3">
+                    <div
+                        class="w-10 h-10 bg-primary flex items-center justify-center rounded-xl text-white font-black text-xl shadow-lg">
+                        U</div>
+                    <div>
+                        <h1 class="font-display text-sm font-black text-white leading-tight tracking-tight uppercase">
+                            UFPS</h1>
+                        <p class="text-[9px] text-primary uppercase tracking-[0.2em] font-extrabold">Ingeniería de
+                            Sistemas</p>
+                    </div>
+                </div>
+            </div>
+            <nav class="flex-1 overflow-y-auto px-4 py-2 custom-scrollbar">
+                <div class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4 px-4 opacity-60">
+                    Generalidades Web</div>
+                <ul class="space-y-0.5">
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 bg-primary text-white shadow-[0_0_20px_rgba(170,25,22,0.4)] font-bold scale-[1.02] mb-1 text-sm font-medium"
+                            href="#hero"><span class="material-symbols-outlined mr-3 text-lg">home</span>Inicio</a></li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-400 hover:bg-white/5 hover:text-white mb-1 text-sm font-medium"
+                            href="#internet"><span
+                                class="material-symbols-outlined mr-3 text-lg">public</span>Internet</a></li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-400 hover:bg-white/5 hover:text-white mb-1 text-sm font-medium"
+                            href="#history"><span
+                                class="material-symbols-outlined mr-3 text-lg">history</span>Historia</a></li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-400 hover:bg-white/5 hover:text-white mb-1 text-sm font-medium"
+                            href="#osi"><span class="material-symbols-outlined mr-3 text-lg">layers</span>Modelo OSI</a>
+                    </li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-400 hover:bg-white/5 hover:text-white mb-1 text-sm font-medium"
+                            href="#tcp-ip"><span
+                                class="material-symbols-outlined mr-3 text-lg">account_tree</span>Modelo TCP/IP</a></li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-400 hover:bg-white/5 hover:text-white mb-1 text-sm font-medium"
+                            href="#protocols"><span
+                                class="material-symbols-outlined mr-3 text-lg">swap_horiz</span>Protocolos</a></li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-400 hover:bg-white/5 hover:text-white mb-1 text-sm font-medium"
+                            href="#services"><span
+                                class="material-symbols-outlined mr-3 text-lg">cloud</span>Servicios</a></li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-400 hover:bg-white/5 hover:text-white mb-1 text-sm font-medium"
+                            href="#ports"><span
+                                class="material-symbols-outlined mr-3 text-lg">settings_input_component</span>Puertos</a>
+                    </li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-400 hover:bg-white/5 hover:text-white mb-1 text-sm font-medium"
+                            href="#ip"><span class="material-symbols-outlined mr-3 text-lg">fingerprint</span>IP</a>
+                    </li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-400 hover:bg-white/5 hover:text-white mb-1 text-sm font-medium"
+                            href="#request"><span class="material-symbols-outlined mr-3 text-lg">send</span>Petición</a>
+                    </li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-400 hover:bg-white/5 hover:text-white mb-1 text-sm font-medium"
+                            href="#client-server"><span
+                                class="material-symbols-outlined mr-3 text-lg">dns</span>Arquitectura</a></li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-400 hover:bg-white/5 hover:text-white mb-1 text-sm font-medium"
+                            href="#three-tier"><span class="material-symbols-outlined mr-3 text-lg">reorder</span>Tres
+                            Capas</a></li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-400 hover:bg-white/5 hover:text-white mb-1 text-sm font-medium"
+                            href="#developer"><span
+                                class="material-symbols-outlined mr-3 text-lg">code</span>Desarrollador</a></li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-400 hover:bg-white/5 hover:text-white mb-1 text-sm font-medium"
+                            href="#www"><span class="material-symbols-outlined mr-3 text-lg">language</span>WWW</a></li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-400 hover:bg-white/5 hover:text-white mb-1 text-sm font-medium"
+                            href="#http"><span class="material-symbols-outlined mr-3 text-lg">http</span>HTTP</a></li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-400 hover:bg-white/5 hover:text-white mb-1 text-sm font-medium"
+                            href="#web-ecosystem"><span
+                                class="material-symbols-outlined mr-3 text-lg">devices</span>Ecosistema</a></li>
+                </ul>
+            </nav>
+            <div class="p-6 border-t border-white/5 bg-secondary/80 backdrop-blur-md">
+                <div class="bg-white/5 rounded-xl p-3 flex items-center justify-between">
+                    <span class="text-[9px] text-slate-500 uppercase font-bold tracking-widest">v2024.1</span>
+                    <span
+                        class="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_8px_rgba(170,25,22,1)]"></span>
+                </div>
+            </div>
+        </aside>
+        <main class="flex-1 overflow-y-auto scroll-smooth custom-scrollbar bg-secondary">
+            <section
+                class="relative min-h-screen flex items-center overflow-hidden bg-secondary border-b border-white/5"
+                id="hero">
+                <div class="absolute inset-0 z-0">
+                    <img alt="Digital Infrastructure"
+                        class="w-full h-full object-cover opacity-30 grayscale saturate-50"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNaxS31JH5NWRorYhyMdgq5F50yJ3V5Y1J1hzpi8-EwdSWVVIog9ih__peGRth6PaIOx0hriUKiqcW2QdqAV_hhelJZm3xYO6A-lmOqNcSSxtBRB7z0UuZkE7IDb2qIcWr7HuIxUwOjvWqhpKRUcg5VFm4xLsGJNeMR1Z7u2RLFkQOlFNE1WguIdaFZOD0p7IKpio0omTaC2QbVVP_tCY5rwjWjtiIehWiMEmQRgClQFRKzSee8WPCc3TT2ldCjI5f8Lnqyv_gUnM" />
+                    <div class="absolute inset-0 hero-overlay"></div>
+                </div>
+                <div
+                    class="relative z-10 max-w-7xl mx-auto px-12 md:px-24 w-full grid grid-cols-1 lg:grid-cols-12 gap-12">
+                    <div class="lg:col-span-8 space-y-8">
+                        <div
+                            class="inline-flex items-center gap-4 bg-primary/10 px-4 py-2 rounded-lg border border-primary/20">
+                            <span class="w-2 h-2 bg-primary rounded-full animate-ping"></span>
+                            <span class="text-primary text-[10px] font-black uppercase tracking-[0.4em]">Academia &amp;
+                                Tecnología</span>
+                        </div>
+                        <div>
+                            <h1 class="font-display text-5xl md:text-7xl text-white font-bold leading-[1.1] mb-6">
+                                Generalidades <br />
+                                <span class="text-primary">de la Web</span>
+                            </h1>
+                            <p class="text-slate-400 text-lg md:text-xl leading-relaxed max-w-2xl font-normal">
+                                Un recurso académico riguroso enfocado en la comprensión técnica de los fundamentos,
+                                arquitecturas y protocolos que sostienen la infraestructura digital global.
+                            </p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-6 pt-4">
+                            <a class="bg-primary hover:bg-red-700 text-white px-10 py-4 rounded-lg font-bold text-sm uppercase tracking-widest transition-all shadow-lg hover:shadow-primary/20 flex items-center gap-4"
+                                href="#internet">
+                                <span>Comenzar</span>
+                                <span class="material-symbols-outlined text-lg">arrow_downward</span>
+                            </a>
+                            <div class="h-12 w-px bg-white/10 hidden sm:block"></div>
+                            <div class="flex flex-col">
+                                <span class="text-white font-bold text-xs uppercase tracking-widest">Programa de
+                                    Ingeniería</span>
+                                <span class="text-slate-500 text-[10px] uppercase tracking-tighter">UFPS - Cúcuta,
+                                    Colombia</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute bottom-10 right-12 hidden lg:flex flex-col items-end gap-2 text-slate-600">
+                    <span class="text-[10px] font-bold uppercase tracking-widest">Estudio de Sistemas
+                        Distribuidos</span>
+                    <div class="w-32 h-[1px] bg-slate-800"></div>
+                </div>
+            </section>
+            <section
+                class="relative py-32 px-12 md:px-24 min-h-screen flex flex-col justify-center overflow-hidden bg-primary text-white divider-diagonal -mt-20 z-10"
+                id="internet">
+                <div
+                    class="absolute font-display font-black text-[25rem] leading-none select-none pointer-events-none opacity-[0.05] z-0 -bottom-20 -left-20 text-white opacity-10">
+                    NET</div>
+                <div class="max-w-6xl relative z-10 w-full mx-auto">
+                    <div class="grid lg:grid-cols-2 gap-20 items-center">
+                        <div>
+                            <span
+                                class="inline-block px-4 py-1 bg-white text-primary font-black text-[10px] uppercase tracking-widest rounded-full mb-8">Infraestructura</span>
+                            <h2 class="font-display text-7xl font-black mb-10 leading-none text-white">Internet:
+                                La<br />Red Global</h2>
+                            <p class="text-xl text-white/90 leading-relaxed mb-8 font-light">
+                                Más que simples cables, es el tejido conectivo de la humanidad moderna. Una
+                                infraestructura descentralizada diseñada para la resiliencia y la transferencia
+                                universal de información.
+                            </p>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="p-6 bg-white/10 backdrop-blur-md rounded-3xl border border-white/20">
+                                    <span class="material-symbols-outlined text-4xl mb-4">hub</span>
+                                    <h4 class="font-black text-lg">Descentralización</h4>
+                                </div>
+                                <div class="p-6 bg-white/10 backdrop-blur-md rounded-3xl border border-white/20">
+                                    <span class="material-symbols-outlined text-4xl mb-4">public</span>
+                                    <h4 class="font-black text-lg">Universalidad</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <div class="absolute -inset-4 bg-white opacity-20 rounded-[3rem] blur-3xl"></div>
+                            <img alt="Internet" class="relative rounded-[3rem] shadow-2xl w-full h-[500px] object-cover"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNaxS31JH5NWRorYhyMdgq5F50yJ3V5Y1J1hzpi8-EwdSWVVIog9ih__peGRth6PaIOx0hriUKiqcW2QdqAV_hhelJZm3xYO6A-lmOqNcSSxtBRB7z0UuZkE7IDb2qIcWr7HuIxUwOjvWqhpKRUcg5VFm4xLsGJNeMR1Z7u2RLFkQOlFNE1WguIdaFZOD0p7IKpio0omTaC2QbVVP_tCY5rwjWjtiIehWiMEmQRgClQFRKzSee8WPCc3TT2ldCjI5f8Lnqyv_gUnM" />
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section
+                class="relative py-32 px-12 md:px-24 min-h-screen flex flex-col justify-center overflow-hidden bg-secondary text-white"
+                id="history">
+                <div
+                    class="absolute font-display font-black text-[25rem] leading-none select-none pointer-events-none opacity-[0.05] z-0 top-20 right-0 text-white opacity-5">
+                    HIST</div>
+                <div class="max-w-5xl mx-auto relative z-10 w-full">
+                    <div class="text-center mb-24">
+                        <span class="text-primary text-xs font-black uppercase tracking-[0.5em] mb-4 block">Evolución
+                            Tecnológica</span>
+                        <h2 class="font-display text-6xl font-black text-white tracking-tight">Key Milestones
+                            <br /><span class="text-slate-400">in Internet History</span>
+                        </h2>
+                    </div>
+                    <div class="relative py-10">
+                        <div class="absolute left-1/2 transform -translate-x-1/2 w-1 bg-primary h-full rounded-full">
+                        </div>
+                        <div class="space-y-24">
+                            <div class="relative flex items-center justify-between group">
+                                <div class="timeline-dot top-1/2"></div>
+                                <div class="w-1/2 pr-12 text-right">
+                                    <span
+                                        class="text-primary font-display font-black text-5xl opacity-50 group-hover:opacity-100 transition-opacity">1961</span>
+                                </div>
+                                <div class="w-1/2 pl-12">
+                                    <div class="bg-white p-8 rounded-2xl shadow-2xl border-l-8 border-primary relative">
+                                        <h3 class="text-secondary font-black text-xl mb-2 uppercase tracking-tight">
+                                            Packet switching theory</h3>
+                                        <p class="text-slate-600 text-sm leading-relaxed">Leonard Kleinrock publica la
+                                            primera teoría sobre conmutación de paquetes, el fundamento de la
+                                            transmisión de datos moderna.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="relative flex items-center justify-between group">
+                                <div class="timeline-dot top-1/2"></div>
+                                <div class="w-1/2 pr-12">
+                                    <div
+                                        class="bg-white p-8 rounded-2xl shadow-2xl border-r-8 border-primary relative text-right">
+                                        <h3 class="text-secondary font-black text-xl mb-2 uppercase tracking-tight">
+                                            First ARPANET message</h3>
+                                        <p class="text-slate-600 text-sm leading-relaxed">Se envía el primer mensaje
+                                            entre computadoras de UCLA y Stanford, marcando el nacimiento práctico de la
+                                            red.</p>
+                                    </div>
+                                </div>
+                                <div class="w-1/2 pl-12">
+                                    <span
+                                        class="text-primary font-display font-black text-5xl opacity-50 group-hover:opacity-100 transition-opacity">1969</span>
+                                </div>
+                            </div>
+                            <div class="relative flex items-center justify-between group">
+                                <div
+                                    class="absolute left-1/2 transform -translate-x-1/2 w-5 h-5 bg-primary border-4 border-secondary rounded-full z-10 top-1/2">
+                                </div>
+                                <div class="w-1/2 pr-12 text-right">
+                                    <span
+                                        class="text-primary font-display font-black text-5xl opacity-50 group-hover:opacity-100 transition-opacity">1983</span>
+                                </div>
+                                <div class="w-1/2 pl-12">
+                                    <div class="bg-white p-8 rounded-2xl shadow-2xl border-l-8 border-primary relative">
+                                        <h3 class="text-secondary font-black text-xl mb-2 uppercase tracking-tight">
+                                            TCP/IP adoption</h3>
+                                        <p class="text-slate-600 text-sm leading-relaxed">ARPANET cambia oficialmente al
+                                            protocolo TCP/IP, permitiendo la interconexión de redes dispares (nace
+                                            Internet).</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="relative flex items-center justify-between group">
+                                <div
+                                    class="absolute left-1/2 transform -translate-x-1/2 w-5 h-5 bg-primary border-4 border-secondary rounded-full z-10 top-1/2">
+                                </div>
+                                <div class="w-1/2 pr-12">
+                                    <div
+                                        class="bg-white p-8 rounded-2xl shadow-2xl border-r-8 border-primary relative text-right">
+                                        <h3 class="text-secondary font-black text-xl mb-2 uppercase tracking-tight">WWW
+                                            Proposal</h3>
+                                        <p class="text-slate-600 text-sm leading-relaxed">Tim Berners-Lee propone el
+                                            sistema de hipertexto en el CERN, estableciendo las bases de la World Wide
+                                            Web.</p>
+                                    </div>
+                                </div>
+                                <div class="w-1/2 pl-12">
+                                    <span
+                                        class="text-primary font-display font-black text-5xl opacity-50 group-hover:opacity-100 transition-opacity">1989</span>
+                                </div>
+                            </div>
+                            <div class="relative flex items-center justify-between group">
+                                <div
+                                    class="absolute left-1/2 transform -translate-x-1/2 w-5 h-5 bg-primary border-4 border-secondary rounded-full z-10 top-1/2">
+                                </div>
+                                <div class="w-1/2 pr-12 text-right">
+                                    <span
+                                        class="text-primary font-display font-black text-5xl opacity-50 group-hover:opacity-100 transition-opacity">2006</span>
+                                </div>
+                                <div class="w-1/2 pl-12">
+                                    <div class="bg-white p-8 rounded-2xl shadow-2xl border-l-8 border-primary relative">
+                                        <h3 class="text-secondary font-black text-xl mb-2 uppercase tracking-tight">
+                                            Modern Mobile Web</h3>
+                                        <p class="text-slate-600 text-sm leading-relaxed">Explosión de las redes
+                                            sociales y la transición masiva a la navegación móvil y aplicaciones web
+                                            progresivas.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section
+                class="relative py-32 px-12 md:px-24 min-h-screen flex flex-col justify-center overflow-hidden bg-secondary text-white divider-diagonal"
+                id="osi">
+                <div
+                    class="absolute font-display font-black text-[25rem] leading-none select-none pointer-events-none opacity-[0.05] z-0 -top-40 -left-20 opacity-5">
+                    OSI</div>
+                <div class="max-w-6xl mx-auto relative z-10 w-full grid lg:grid-cols-2 gap-20 items-center">
+                    <div class="space-y-6">
+                        <div class="w-20 h-2 bg-primary mb-8"></div>
+                        <h2 class="font-display text-6xl font-black leading-tight">Modelo de Capas OSI</h2>
+                        <p class="text-slate-400 text-xl font-light">
+                            El estándar universal para la interconexión. Siete capas que aseguran que dispositivos de
+                            diferentes fabricantes hablen el mismo idioma.
+                        </p>
+                        <div
+                            class="inline-flex items-center gap-3 px-6 py-3 bg-primary/10 border border-primary/20 rounded-full">
+                            <span class="material-symbols-outlined text-primary">security</span>
+                            <span class="text-xs font-bold uppercase tracking-widest text-primary">ISO/IEC 7498-1
+                                Standard</span>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div
+                            class="flex items-center gap-4 bg-white/5 p-4 rounded-2xl hover:bg-white/10 transition-colors border border-white/5">
+                            <span class="w-8 font-black text-primary">07</span>
+                            <span class="font-bold uppercase tracking-wider text-white">Aplicación</span>
+                        </div>
+                        <div
+                            class="flex items-center gap-4 bg-white/5 p-4 rounded-2xl hover:bg-white/10 transition-colors border border-white/5">
+                            <span class="w-8 font-black text-primary">06</span>
+                            <span class="font-bold uppercase tracking-wider text-white">Presentación</span>
+                        </div>
+                        <div
+                            class="flex items-center gap-4 bg-white/5 p-4 rounded-2xl hover:bg-white/10 transition-colors border border-white/5">
+                            <span class="w-8 font-black text-primary">05</span>
+                            <span class="font-bold uppercase tracking-wider text-white">Sesión</span>
+                        </div>
+                        <div
+                            class="flex items-center gap-4 bg-primary p-6 rounded-2xl shadow-xl shadow-red-900/40 scale-105 z-10">
+                            <span class="w-8 font-black text-white">04</span>
+                            <span class="font-black uppercase tracking-[0.2em] text-white">Transporte</span>
+                        </div>
+                        <div
+                            class="flex items-center gap-4 bg-white/5 p-4 rounded-2xl hover:bg-white/10 transition-colors border border-white/5">
+                            <span class="w-8 font-black text-primary">03</span>
+                            <span class="font-bold uppercase tracking-wider text-white">Red</span>
+                        </div>
+                        <div
+                            class="flex items-center gap-4 bg-white/5 p-4 rounded-2xl hover:bg-white/10 transition-colors border border-white/5">
+                            <span class="w-8 font-black text-primary">02</span>
+                            <span class="font-bold uppercase tracking-wider text-white">Enlace</span>
+                        </div>
+                        <div
+                            class="flex items-center gap-4 bg-white/5 p-4 rounded-2xl hover:bg-white/10 transition-colors border border-white/5">
+                            <span class="w-8 font-black text-primary">01</span>
+                            <span class="font-bold uppercase tracking-wider text-white">Física</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section
+                class="relative py-32 px-12 md:px-24 min-h-screen flex flex-col justify-center overflow-hidden bg-white text-secondary"
+                id="protocols">
+                <div
+                    class="absolute font-display font-black text-[25rem] leading-none select-none pointer-events-none opacity-[0.05] z-0 -bottom-20 right-0 text-slate-100">
+                    DATA</div>
+                <div class="max-w-6xl mx-auto relative z-10 w-full">
+                    <div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+                        <h2 class="font-display text-7xl font-black text-secondary leading-none">Protocolos
+                            &amp;<br /><span class="text-primary">Puertos</span></h2>
+                        <p class="max-w-sm text-slate-500 font-medium">Las reglas de tráfico y las puertas de entrada al
+                            mundo digital.</p>
+                    </div>
+                    <div class="grid lg:grid-cols-2 gap-12">
+                        <div class="space-y-6">
+                            <div
+                                class="p-8 bg-slate-50 rounded-[2.5rem] border border-slate-100 flex items-center gap-8 group hover:bg-primary hover:text-white transition-all duration-500">
+                                <span
+                                    class="text-5xl font-display font-black text-primary group-hover:text-white">80</span>
+                                <div>
+                                    <h4 class="font-black text-xl uppercase tracking-widest">HTTP</h4>
+                                    <p class="text-sm opacity-60">Puerto estándar para navegación web básica.</p>
+                                </div>
+                            </div>
+                            <div
+                                class="p-8 bg-secondary text-white rounded-[2.5rem] flex items-center gap-8 group hover:scale-[1.02] transition-all">
+                                <span class="text-5xl font-display font-black text-primary">443</span>
+                                <div>
+                                    <h4 class="font-black text-xl uppercase tracking-widest">HTTPS</h4>
+                                    <p class="text-sm text-slate-400">Navegación segura cifrada con SSL/TLS.</p>
+                                </div>
+                            </div>
+                            <div
+                                class="p-8 bg-slate-50 rounded-[2.5rem] border border-slate-100 flex items-center gap-8 group hover:bg-primary hover:text-white transition-all duration-500">
+                                <span
+                                    class="text-5xl font-display font-black text-primary group-hover:text-white">22</span>
+                                <div>
+                                    <h4 class="font-black text-xl uppercase tracking-widest">SSH</h4>
+                                    <p class="text-sm opacity-60">Acceso remoto seguro a servidores.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-primary p-12 rounded-[3rem] text-white flex flex-col justify-center">
+                            <span class="material-symbols-outlined text-8xl mb-6">security</span>
+                            <h3 class="text-4xl font-black mb-6">Seguridad por Defecto</h3>
+                            <p class="text-white/80 text-lg leading-relaxed mb-8">
+                                En la web moderna, el uso de protocolos cifrados no es opcional. SSL/TLS garantiza la
+                                integridad y privacidad de los datos entre cliente y servidor.
+                            </p>
+                            <div class="flex gap-4">
+                                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                                    <span class="material-symbols-outlined">lock</span>
+                                </div>
+                                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                                    <span class="material-symbols-outlined">verified</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section
+                class="relative py-32 px-12 md:px-24 min-h-screen flex flex-col justify-center overflow-hidden bg-secondary text-white"
+                id="ip">
+                <div
+                    class="absolute font-display font-black text-[25rem] leading-none select-none pointer-events-none opacity-[0.05] z-0 top-0 right-0 opacity-5">
+                    IPv6</div>
+                <div class="max-w-4xl mx-auto relative z-10 w-full text-center">
+                    <h2 class="font-display text-6xl font-black mb-16 italic text-primary">Identidad en la Red</h2>
+                    <div class="space-y-8">
+                        <div
+                            class="p-12 bg-white/5 rounded-[4rem] border border-white/10 backdrop-blur-sm group hover:border-primary/50 transition-all">
+                            <h4 class="text-primary font-black uppercase text-xs tracking-[0.3em] mb-4">Direccionamiento
+                                Clásico</h4>
+                            <div class="text-5xl md:text-7xl font-mono font-black text-white mb-6">192.168.1.1</div>
+                            <p class="text-slate-500 uppercase font-bold text-[10px] tracking-widest">IPv4 · 32 BITS ·
+                                DECIMAL</p>
+                        </div>
+                        <div
+                            class="p-12 bg-primary rounded-[4rem] shadow-2xl shadow-red-900/30 transform hover:scale-[1.02] transition-all">
+                            <h4 class="text-white/60 font-black uppercase text-xs tracking-[0.3em] mb-4 text-white">
+                                Siguiente Generación</h4>
+                            <div class="text-2xl md:text-4xl font-mono font-black text-white mb-6 break-all">
+                                2001:0DB8:85A3:0000:0000:8A2E:0370:7334</div>
+                            <p class="text-white/60 uppercase font-bold text-[10px] tracking-widest text-white">IPv6 ·
+                                128 BITS · HEXADECIMAL</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section
+                class="relative py-32 px-12 md:px-24 min-h-screen flex flex-col justify-center overflow-hidden bg-white text-secondary"
+                id="request">
+                <div
+                    class="absolute font-display font-black text-[25rem] leading-none select-none pointer-events-none opacity-[0.05] z-0 -top-20 -left-20 text-slate-100">
+                    FLOW</div>
+                <div class="max-w-6xl mx-auto relative z-10 w-full">
+                    <div class="bg-secondary rounded-[4rem] p-16 md:p-24 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-64 h-64 bg-primary/20 blur-[120px]"></div>
+                        <div class="relative z-10 text-center mb-20">
+                            <h2 class="font-display text-5xl font-black text-white mb-4">Anatomía de una Petición</h2>
+                            <p class="text-slate-400">El viaje del dato desde el clic hasta la pantalla.</p>
+                        </div>
+                        <div class="grid md:grid-cols-3 gap-12 items-center text-center">
+                            <div class="space-y-4">
+                                <div
+                                    class="w-32 h-32 bg-white/5 border-2 border-primary rounded-full flex items-center justify-center mx-auto shadow-2xl shadow-red-900/20">
+                                    <span class="material-symbols-outlined text-5xl text-primary">laptop_mac</span>
+                                </div>
+                                <h4 class="text-white font-black uppercase tracking-widest text-xs">Cliente (Browser)
+                                </h4>
+                            </div>
+                            <div class="flex flex-col items-center gap-4">
+                                <div
+                                    class="text-[10px] font-mono font-bold text-primary bg-primary/10 px-4 py-2 rounded-lg border border-primary/20">
+                                    GET /index.html HTTP/1.1</div>
+                                <div class="w-full h-1 bg-white/10 relative rounded-full overflow-hidden">
+                                    <div class="absolute inset-y-0 left-0 bg-primary w-2/3"></div>
+                                </div>
+                                <div
+                                    class="text-[10px] font-mono font-bold text-green-500 bg-green-500/10 px-4 py-2 rounded-lg border border-green-500/20">
+                                    200 OK (text/html)</div>
+                            </div>
+                            <div class="space-y-4">
+                                <div
+                                    class="w-32 h-32 bg-primary rounded-full flex items-center justify-center mx-auto shadow-2xl shadow-red-900/40">
+                                    <span class="material-symbols-outlined text-5xl text-white">dns</span>
+                                </div>
+                                <h4 class="text-white font-black uppercase tracking-widest text-xs">Servidor Web</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section
+                class="relative py-32 px-12 md:px-24 min-h-screen flex flex-col justify-center overflow-hidden bg-primary text-white divider-diagonal"
+                id="developer">
+                <div
+                    class="absolute font-display font-black text-[25rem] leading-none select-none pointer-events-none opacity-[0.05] z-0 -bottom-20 -right-20 text-white opacity-10">
+                    CODE</div>
+                <div class="max-w-6xl mx-auto relative z-10 w-full">
+                    <h2 class="font-display text-7xl font-black mb-20 leading-none text-white">
+                        Perfiles<br />Profesionales</h2>
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <div
+                            class="p-12 bg-white text-secondary rounded-[3rem] shadow-2xl transition-transform hover:-translate-y-4">
+                            <h3 class="text-3xl font-black mb-6">Frontend</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed mb-8">El arquitecto de la experiencia
+                                visual. Domina HTML, CSS y frameworks modernos como React o Vue.</p>
+                            <span class="material-symbols-outlined text-primary text-5xl">terminal</span>
+                        </div>
+                        <div
+                            class="p-12 bg-secondary text-white rounded-[3rem] shadow-2xl transition-transform hover:-translate-y-4 scale-105 z-10 border-2 border-white/10">
+                            <h3 class="text-3xl font-black mb-6 text-primary">Fullstack</h3>
+                            <p class="text-slate-400 text-sm leading-relaxed mb-8">El orquestador total. Capaz de
+                                navegar entre la lógica del servidor y la interfaz del usuario sin fricción.</p>
+                            <span class="material-symbols-outlined text-white text-5xl">deployed_code</span>
+                        </div>
+                        <div
+                            class="p-12 bg-white text-secondary rounded-[3rem] shadow-2xl transition-transform hover:-translate-y-4">
+                            <h3 class="text-3xl font-black mb-6">Backend</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed mb-8">El guardián de la lógica y los datos.
+                                Especialista en seguridad, APIs y bases de datos robustas.</p>
+                            <span class="material-symbols-outlined text-primary text-5xl">database</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section
+                class="relative py-32 px-12 md:px-24 min-h-screen flex flex-col justify-center overflow-hidden bg-white text-secondary pb-0"
+                id="web-ecosystem">
+                <div
+                    class="absolute font-display font-black text-[25rem] leading-none select-none pointer-events-none opacity-[0.05] z-0 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-slate-50">
+                    FINAL</div>
+                <div class="max-w-6xl mx-auto relative z-10 w-full">
+                    <div class="grid lg:grid-cols-2 gap-20 items-center mb-32">
+                        <div class="relative group">
+                            <div class="absolute -inset-10 bg-primary/10 blur-[100px] rounded-full"></div>
+                            <img alt="Ecosistema"
+                                class="relative rounded-[4rem] shadow-2xl w-full h-[600px] object-cover grayscale hover:grayscale-0 transition-all duration-1000"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjYKxLjeuEMlcjB2XraBy7sqWISJcGCIe9zQnYG4PfIRympG6iqPbOnSNCeHgCcPQzzZknZWzXm6ExwXb3ms9aDGm4GslviUo5lNUWR3RKRN8rvcRdvBe-OAqRVoCEJXgYbpYjk0spVHhKomplA0mTnvGEol6rMk4f8tWDUxtrPee8mOlDOxXAgfOCEbjkGmuHrZG8eSToi3ZUwbuCni31wM01Yqy2i0IZkSAqgMNexhAPXZ5_dutsAwuKjYhQ9IgLkka76ZxBs9w" />
+                        </div>
+                        <div>
+                            <span
+                                class="text-primary font-black uppercase text-xs tracking-[0.4em] mb-6 block">Conclusión
+                                Académica</span>
+                            <h2 class="font-display text-6xl font-black text-secondary mb-8 leading-tight">El
+                                Ecosistema<br />Web Moderno</h2>
+                            <p class="text-slate-500 text-xl leading-relaxed mb-12 font-medium">
+                                La web ya no es un destino, es el sistema operativo del mundo moderno. Comprender sus
+                                cimientos es el primer paso para construir el futuro digital.
+                            </p>
+                            <button
+                                class="bg-secondary text-white px-16 py-7 rounded-full font-black text-sm uppercase tracking-widest hover:bg-primary transition-all shadow-2xl hover:scale-105">
+                                Finalizar Recorrido
+                            </button>
+                        </div>
+                    </div>
+                    <footer
+                        class="py-16 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-12">
+                        <div class="flex items-center gap-6">
+                            <div
+                                class="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-white font-black text-xl">
+                                U</div>
+                            <div>
+                                <p class="text-secondary font-black text-xs uppercase tracking-widest">UFPS Cúcuta</p>
+                                <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Ingeniería de
+                                    Sistemas</p>
+                            </div>
+                        </div>
+                        <div class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em]">
+                            © 2024 · Educación Digital · Web Fundamentals
+                        </div>
+                        <div class="flex gap-4">
+                            <a class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all"
+                                href="#"><span class="material-symbols-outlined">share</span></a>
+                            <a class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all"
+                                href="#"><span class="material-symbols-outlined">description</span></a>
+                        </div>
+                    </footer>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

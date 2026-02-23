@@ -1,0 +1,2211 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Generalidades de la Web | UFPS Portal Educativo</title>
+
+    <!-- Tailwind and Fonts -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#C41E3A", // Crimson UFPS Red Refinado
+                        accent: "#FF3131",  // Red Glow
+                        secondary: "#0B0D11", // Deep Dark
+                        surface: "#161B22",   // Elevated Surface
+                        "white-soft": "#F6F8FA", // Soft White/Gray
+                    },
+                    fontFamily: {
+                        display: ["Montserrat", "sans-serif"],
+                        sans: ["Inter", "sans-serif"],
+                    },
+                },
+            },
+        };
+    </script>
+
+    <!-- Estilos Personalizados (No-Tailwind) -->
+    <style>
+        .divider-diagonal {
+            clip-path: polygon(0 0, 100% 5%, 100% 100%, 0 95%);
+        }
+
+        /* Barra de desplazamiento */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background-color: #0B0D11;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #C41E3A !important;
+            border-radius: 20px;
+            border: 3px solid #0B0D11;
+        }
+
+        .hero-overlay {
+            background: radial-gradient(circle at center, rgba(11, 13, 17, 0.7) 0%, rgba(11, 13, 17, 0.98) 100%),
+                linear-gradient(to right, rgba(196, 30, 58, 0.1), transparent);
+        }
+
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease-out;
+        }
+
+        .scroll-reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        @keyframes flow-right {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .animate-flow-right {
+            animation: flow-right 2s linear infinite;
+        }
+
+        /* Custom Cursor */
+        .cursor-follower {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: rgba(196, 30, 58, 0.3);
+            border: 1px solid rgba(196, 30, 58, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transition: transform 0.1s ease-out, width 0.3s ease, height 0.3s ease, background 0.3s ease;
+            mix-blend-mode: plus-lighter;
+        }
+
+        .cursor-follower.active {
+            transform: scale(2.5);
+            background: rgba(196, 30, 58, 0.5);
+            border: none;
+        }
+
+        /* Scroll Progress */
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(to right, #C41E3A, #ff4d4d);
+            z-index: 10001;
+            box-shadow: 0 2px 10px rgba(196, 30, 58, 0.3);
+            transition: width 0.1s ease-out;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Google Translate Widget Overrides */
+        #google_translate_element {
+            display: none;
+            position: fixed;
+            bottom: 6rem;
+            right: 2rem;
+            z-index: 1000;
+            background: #161B22;
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        .goog-te-banner-frame.skiptranslate {
+            display: none !important;
+        }
+
+        body {
+            top: 0 !important;
+        }
+
+        /* Download Options Menu */
+        #download-options {
+            display: none;
+        }
+    </style>
+    <!-- html2pdf dependency -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+
+<body class="bg-secondary font-sans selection:bg-primary selection:text-white overflow-x-hidden">
+    <!-- UI Enhancements -->
+    <div id="scroll-progress"></div>
+    <div class="cursor-follower" id="cursor"></div>
+
+    <!-- Acronym Decoder UI -->
+    <div id="acronym-tooltip"
+        class="fixed z-[100] p-4 bg-secondary border border-white/10 rounded-2xl shadow-2xl opacity-0 pointer-events-none transition-all duration-300 max-w-xs scale-90">
+        <div class="space-y-2">
+            <div id="tooltip-sigla" class="text-primary font-black uppercase text-xs tracking-widest"></div>
+            <div id="tooltip-meaning" class="text-white font-bold text-sm"></div>
+            <div class="h-[1px] bg-white/10 w-full"></div>
+            <div id="tooltip-desc" class="text-slate-400 text-[11px] italic leading-relaxed"></div>
+        </div>
+    </div>
+
+    <button id="glossary-toggle"
+        class="fixed bottom-8 right-8 z-50 w-14 h-14 bg-secondary border border-white/10 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all group overflow-hidden">
+        <div class="absolute inset-0 bg-primary opacity-0 group-hover:opacity-10 transition-opacity"></div>
+        <span
+            class="material-symbols-outlined text-white text-2xl group-hover:text-primary transition-colors">translate</span>
+        <!-- Badge -->
+        <div class="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full border-2 border-secondary animate-pulse">
+        </div>
+    </button>
+
+    <!-- Hidden Google Translate Element -->
+    <div id="google_translate_element"></div>
+
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-72 bg-secondary flex flex-col z-50 border-r border-white/5 shrink-0 shadow-2xl">
+            <div class="p-8">
+                <div class="flex items-center space-x-3">
+                    <div
+                        class="w-10 h-10 bg-primary flex items-center justify-center rounded-xl text-white font-black text-xl shadow-lg">
+                        U</div>
+                    <div>
+                        <h1 class="font-display text-sm font-black text-white leading-tight tracking-tight uppercase">
+                            UFPS</h1>
+                        <p class="text-[9px] text-primary uppercase tracking-[0.2em] font-extrabold">Ingeniería de
+                            Sistemas</p>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="flex-1 overflow-y-auto px-4 py-2 custom-scrollbar">
+                <div
+                    class="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-4 px-4 drop-shadow-[0_0_8px_rgba(196,30,58,0.3)]">
+                    Generalidades
+                    Web</div>
+                <ul class="space-y-0.5">
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 bg-primary text-white shadow-[0_0_25px_rgba(196,30,58,0.4)] font-bold scale-[1.02] border-r-4 border-accent mb-1 text-sm font-medium"
+                            href="#hero"><span class="material-symbols-outlined mr-3 text-lg">home</span>Inicio</a></li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-300 hover:bg-white/10 hover:text-white mb-1 text-sm font-medium"
+                            href="#internet"><span
+                                class="material-symbols-outlined mr-3 text-lg">public</span>Internet</a></li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-300 hover:bg-white/10 hover:text-white mb-1 text-sm font-medium"
+                            href="#history"><span
+                                class="material-symbols-outlined mr-3 text-lg">history</span>Historia</a></li>
+                    <div class="h-px bg-white/5 my-4 mx-4"></div>
+                    <div class="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2 px-4">Arquitectura
+                    </div>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-300 hover:bg-white/10 hover:text-white mb-1 text-sm font-medium"
+                            href="#osi"><span class="material-symbols-outlined mr-3 text-lg">layers</span>Modelo OSI</a>
+                    </li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-300 hover:bg-white/10 hover:text-white mb-1 text-sm font-medium"
+                            href="#tcp-ip"><span
+                                class="material-symbols-outlined mr-3 text-lg">account_tree</span>Modelo TCP/IP</a></li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-300 hover:bg-white/10 hover:text-white mb-1 text-sm font-medium"
+                            href="#comm-protocols"><span
+                                class="material-symbols-outlined mr-3 text-lg">swap_horiz</span>Protocolos Comms</a>
+                    </li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-300 hover:bg-white/10 hover:text-white mb-1 text-sm font-medium"
+                            href="#web-services"><span
+                                class="material-symbols-outlined mr-3 text-lg">cloud</span>Servicios Web</a></li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-300 hover:bg-white/10 hover:text-white mb-1 text-sm font-medium"
+                            href="#ports"><span class="material-symbols-outlined mr-3 text-lg">lan</span>Puertos de
+                            Red</a></li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-300 hover:bg-white/10 hover:text-white mb-1 text-sm font-medium"
+                            href="#ip"><span class="material-symbols-outlined mr-3 text-lg">fingerprint</span>Dirección
+                            IP</a></li>
+                    <div class="h-px bg-white/5 my-4 mx-4"></div>
+                    <div class="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2 px-4">Interacción
+                    </div>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-300 hover:bg-white/10 hover:text-white mb-1 text-sm font-medium"
+                            href="#request"><span class="material-symbols-outlined mr-3 text-lg">send</span>Petición
+                            Web</a></li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-300 hover:bg-white/10 hover:text-white mb-1 text-sm font-medium"
+                            href="#client-server"><span
+                                class="material-symbols-outlined mr-3 text-lg">computer</span>Cliente-Servidor</a></li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-300 hover:bg-white/10 hover:text-white mb-1 text-sm font-medium"
+                            href="#three-tier"><span class="material-symbols-outlined mr-3 text-lg">reorder</span>Tres
+                            Capas</a></li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-300 hover:bg-white/10 hover:text-white mb-1 text-sm font-medium"
+                            href="#developer"><span
+                                class="material-symbols-outlined mr-3 text-lg">code</span>Desarrollador</a></li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-300 hover:bg-white/10 hover:text-white mb-1 text-sm font-medium"
+                            href="#www"><span
+                                class="material-symbols-outlined mr-3 text-lg language">language</span>World Wide
+                            Web</a></li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-300 hover:bg-white/10 hover:text-white mb-1 text-sm font-medium"
+                            href="#http"><span class="material-symbols-outlined mr-3 text-lg">http</span>HTTP</a></li>
+                    <li><a class="flex items-center p-3 rounded-xl transition-all duration-300 text-slate-300 hover:bg-white/10 hover:text-white mb-1 text-sm font-medium"
+                            href="#web-ecosystem"><span
+                                class="material-symbols-outlined mr-3 text-lg">devices</span>Ecosistema</a></li>
+                </ul>
+            </nav>
+
+            <div class="p-6 border-t border-white/5 bg-secondary/80 backdrop-blur-md">
+                <div class="bg-white/5 rounded-xl p-3 flex items-center justify-between">
+                    <span class="text-[9px] text-slate-500 uppercase font-bold tracking-widest">v2026.1</span>
+                    <span
+                        class="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_8px_rgba(170,25,22,1)]"></span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto scroll-smooth custom-scrollbar bg-secondary">
+            <!-- Hero Section -->
+            <section
+                class="relative min-h-screen flex items-center overflow-hidden bg-secondary border-b border-white/5"
+                id="hero">
+                <div class="absolute inset-0 z-0">
+                    <div class="absolute inset-0 hero-overlay"></div>
+                </div>
+                <div
+                    class="relative z-10 max-w-7xl mx-auto px-12 md:px-24 w-full grid grid-cols-1 lg:grid-cols-12 gap-12">
+                    <div class="lg:col-span-8 space-y-8 scroll-reveal">
+                        <div
+                            class="inline-flex items-center gap-4 bg-primary/10 px-4 py-2 rounded-lg border border-primary/20">
+                            <span class="w-2 h-2 bg-primary rounded-full animate-ping"></span>
+                            <span class="text-primary text-[10px] font-black uppercase tracking-[0.4em]">Academia &
+                                Tecnología</span>
+                        </div>
+                        <div>
+                            <h1 class="font-display text-5xl md:text-7xl text-white font-bold leading-[1.1] mb-6">
+                                Generalidades <br />
+                                <span class="text-primary">de la Web</span>
+                            </h1>
+                            <p class="text-slate-400 text-lg md:text-xl leading-relaxed max-w-2xl font-normal">
+                                Un recurso académico riguroso enfocado en la comprensión técnica de los fundamentos,
+                                arquitecturas y protocolos que sostienen la infraestructura digital global, desde el
+                                modelo <span class="acronym" data-acro="OSI">OSI</span> hasta los protocolos de la <span
+                                    class="acronym" data-acro="WWW">WWW</span>.
+                            </p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-6 pt-4">
+                            <a class="bg-primary hover:bg-red-700 text-white px-10 py-4 rounded-lg font-bold text-sm uppercase tracking-widest transition-all shadow-lg hover:shadow-primary/20 flex items-center gap-4"
+                                href="#internet">
+                                <span>Comenzar</span>
+                                <span class="material-symbols-outlined text-lg">arrow_downward</span>
+                            </a>
+                            <div class="h-12 w-px bg-white/10 hidden sm:block"></div>
+                            <div class="flex flex-col">
+                                <span class="text-white font-bold text-xs uppercase tracking-widest">Programa de
+                                    Ingeniería</span>
+                                <span class="text-slate-500 text-[10px] uppercase tracking-tighter">UFPS - Cúcuta,
+                                    Colombia</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Internet Section -->
+            <section
+                class="relative py-32 px-12 md:px-24 min-h-screen flex flex-col justify-center overflow-hidden bg-white-soft text-slate-800 border-b border-slate-100"
+                id="internet">
+                <div class="max-w-6xl relative z-10 w-full mx-auto scroll-reveal text-center">
+                    <div class="space-y-12 text-slate-800">
+                        <div class="space-y-6">
+                            <span
+                                class="inline-block px-4 py-1 bg-primary text-white font-black text-[10px] uppercase tracking-widest rounded-full">Infraestructura</span>
+                            <h2 class="font-display text-7xl font-black leading-none text-secondary uppercase italic">
+                                Internet: La Red Global</h2>
+                            <p class="text-xl text-slate-600 leading-relaxed font-light max-w-5xl mx-auto">
+                                Internet es una red global descentralizada de redes interconectadas que utilizan el
+                                protocolo <span class="acronym text-primary font-bold" data-acro="TCP/IP">TCP/IP</span>
+                                para comunicarse. Es la infraestructura técnica que permite el
+                                intercambio universal de información, facilitando servicios como la <span
+                                    class="acronym text-secondary font-bold" data-acro="WWW">World Wide Web</span> y la
+                                transferencia de datos en tiempo real.
+                            </p>
+                        </div>
+
+                        <div class="relative mt-8 flex justify-center">
+                            <img alt="Red Global de Internet" class="max-w-4xl h-auto" src="images/internet.png" />
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- History Section -->
+            <section
+                class="relative py-32 px-12 md:px-24 min-h-screen flex flex-col justify-center overflow-hidden bg-surface text-white"
+                id="history">
+                <div class="max-w-5xl mx-auto relative z-10 w-full scroll-reveal">
+                    <div class="text-center mb-24">
+                        <span class="text-primary text-xs font-black uppercase tracking-[0.5em] mb-4 block">Evolución
+                            Tecnológica</span>
+                        <h2 class="font-display text-6xl font-black text-white tracking-tight italic">Un poco de
+                            Historia</h2>
+                    </div>
+                    <div class="relative py-10">
+                        <div class="absolute left-1/2 transform -translate-x-1/2 w-1 bg-primary h-full rounded-full">
+                        </div>
+                        <div class="space-y-24">
+                            <!-- 1961 -->
+                            <div class="relative flex items-center justify-between group">
+                                <div class="timeline-dot top-1/2"></div>
+                                <div class="w-1/2 pr-12 text-right">
+                                    <span
+                                        class="text-primary font-display font-black text-5xl opacity-40 group-hover:opacity-100 transition-all duration-500">1961</span>
+                                </div>
+                                <div class="w-1/2 pl-12">
+                                    <div
+                                        class="bg-surface p-8 rounded-2xl shadow-xl border-l-8 border-primary relative group-hover:scale-[1.03] transition-transform duration-500">
+                                        <p class="text-slate-300 text-sm leading-relaxed">Leonard Kleinrock publica la
+                                            primera teoría sobre conmutación de paquetes, el fundamento de la
+                                            transmisión de datos moderna.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 1969 -->
+                            <div class="relative flex items-center justify-between group">
+                                <div
+                                    class="absolute left-1/2 transform -translate-x-1/2 w-5 h-5 bg-primary border-4 border-secondary rounded-full z-10 top-1/2">
+                                </div>
+                                <div class="w-1/2 pr-12 text-right">
+                                    <div
+                                        class="bg-surface p-8 rounded-2xl shadow-xl border-r-8 border-primary relative text-right group-hover:scale-[1.03] transition-transform duration-500">
+                                        <p class="text-slate-300 text-sm leading-relaxed">Se envía el primer mensaje
+                                            entre computadoras de UCLA y Stanford, marcando el nacimiento práctico de la
+                                            red ARPANET.</p>
+                                    </div>
+                                </div>
+                                <div class="w-1/2 pl-12">
+                                    <span
+                                        class="text-primary font-display font-black text-5xl opacity-40 group-hover:opacity-100 transition-all duration-500">1969</span>
+                                </div>
+                            </div>
+
+                            <!-- 1983 -->
+                            <div class="relative flex items-center justify-between group">
+                                <div
+                                    class="absolute left-1/2 transform -translate-x-1/2 w-5 h-5 bg-primary border-4 border-secondary rounded-full z-10 top-1/2">
+                                </div>
+                                <div class="w-1/2 pr-12 text-right">
+                                    <span
+                                        class="text-primary font-display font-black text-5xl opacity-40 group-hover:opacity-100 transition-all duration-500">1983</span>
+                                </div>
+                                <div class="w-1/2 pl-12">
+                                    <div
+                                        class="bg-surface p-8 rounded-2xl shadow-xl border-l-8 border-primary relative group-hover:scale-[1.03] transition-transform duration-500">
+                                        <p class="text-slate-300 text-sm leading-relaxed">Adopción oficial del protocolo
+                                            TCP/IP por ARPANET. Este suceso marca el inicio técnico de la red global
+                                            interconectada.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 1989 -->
+                            <div class="relative flex items-center justify-between group">
+                                <div
+                                    class="absolute left-1/2 transform -translate-x-1/2 w-5 h-5 bg-primary border-4 border-secondary rounded-full z-10 top-1/2">
+                                </div>
+                                <div class="w-1/2 pr-12 text-right">
+                                    <div
+                                        class="bg-surface p-8 rounded-2xl shadow-xl border-r-8 border-primary relative text-right group-hover:scale-[1.03] transition-transform duration-500">
+                                        <p class="text-slate-300 text-sm leading-relaxed">Tim Berners-Lee publica su
+                                            propuesta para un sistema de gestión de información descentralizado,
+                                            naciendo la World Wide Web.</p>
+                                    </div>
+                                </div>
+                                <div class="w-1/2 pl-12">
+                                    <span
+                                        class="text-primary font-display font-black text-5xl opacity-40 group-hover:opacity-100 transition-all duration-500">1989</span>
+                                </div>
+                            </div>
+
+                            <!-- 2006 -->
+                            <div class="relative flex items-center justify-between group">
+                                <div
+                                    class="absolute left-1/2 transform -translate-x-1/2 w-5 h-5 bg-primary border-4 border-secondary rounded-full z-10 top-1/2">
+                                </div>
+                                <div class="w-1/2 pr-12 text-right">
+                                    <span
+                                        class="text-primary font-display font-black text-5xl opacity-40 group-hover:opacity-100 transition-all duration-500">2006</span>
+                                </div>
+                                <div class="w-1/2 pl-12">
+                                    <div
+                                        class="bg-surface p-8 rounded-2xl shadow-xl border-l-8 border-primary relative group-hover:scale-[1.03] transition-transform duration-500">
+                                        <p class="text-slate-300 text-sm leading-relaxed">Explosión de las redes
+                                            sociales y expansión global de los smartphones, transformando Internet en
+                                            una plataforma ubicua y social.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </section>
+
+            <!-- OSI Section -->
+            <section
+                class="relative py-32 px-12 md:px-24 min-h-screen flex flex-col justify-center overflow-hidden bg-white-soft text-slate-800 border-b border-slate-100"
+                id="osi">
+                <div
+                    class="absolute font-display font-black text-[18rem] leading-none select-none pointer-events-none opacity-[0.05] z-0 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] text-slate-900">
+                    OSI</div>
+                <div
+                    class="max-w-6xl mx-auto relative z-10 w-full grid lg:grid-cols-2 gap-20 items-center scroll-reveal">
+                    <div class="space-y-8">
+                        <div class="w-20 h-2 bg-primary mb-8"></div>
+                        <h2 class="font-display text-6xl font-black leading-tight text-secondary">Modelo de Capas OSI
+                        </h2>
+                        <p class="text-black text-lg font-light leading-relaxed">
+                            Es un modelo conceptual que caracteriza y estandariza las funciones de comunicación de un
+                            sistema de telecomunicaciones o computación sin tener en cuenta su estructura interna y
+                            tecnología subyacentes.
+                        </p>
+                        <!-- Panel de Información Dinámico -->
+                        <div class="bg-white border border-slate-200 p-8 rounded-3xl min-h-[220px] flex items-center justify-center transition-all duration-500 shadow-sm"
+                            id="osi-info-panel">
+                            <div class="text-center space-y-4">
+                                <span class="material-symbols-outlined text-5xl text-primary/30">info</span>
+                                <p class="text-black font-medium">Selecciona una capa para ver su detalle</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Pila de Capas OSI -->
+                    <div class="space-y-4 py-8" id="osi-layers-stack">
+                        <button
+                            class="osi-layer w-full flex items-center gap-6 bg-slate-50 p-4 rounded-2xl hover:bg-primary/10 hover:scale-[1.02] transition-all border border-slate-100 active:scale-95 group shadow-sm"
+                            data-layer="7">
+                            <span class="w-10 font-black text-primary text-xl">07</span>
+                            <span
+                                class="font-bold uppercase tracking-widest text-slate-700 group-hover:text-primary transition-colors">Aplicación</span>
+                        </button>
+                        <button
+                            class="osi-layer w-full flex items-center gap-6 bg-slate-50 p-4 rounded-2xl hover:bg-primary/10 hover:scale-[1.02] transition-all border border-slate-100 active:scale-95 group shadow-sm"
+                            data-layer="6">
+                            <span class="w-10 font-black text-primary text-xl">06</span>
+                            <span
+                                class="font-bold uppercase tracking-widest text-slate-700 group-hover:text-primary transition-colors">Presentación</span>
+                        </button>
+                        <button
+                            class="osi-layer w-full flex items-center gap-6 bg-slate-50 p-4 rounded-2xl hover:bg-primary/10 hover:scale-[1.02] transition-all border border-slate-100 active:scale-95 group shadow-sm"
+                            data-layer="5">
+                            <span class="w-10 font-black text-primary text-xl">05</span>
+                            <span
+                                class="font-bold uppercase tracking-widest text-slate-700 group-hover:text-primary transition-colors">Sesión</span>
+                        </button>
+                        <button
+                            class="osi-layer w-full flex items-center gap-6 bg-slate-50 p-4 rounded-2xl hover:bg-primary/10 hover:scale-[1.02] transition-all border border-slate-100 active:scale-95 group shadow-sm"
+                            data-layer="4">
+                            <span class="w-10 font-black text-primary text-xl">04</span>
+                            <span
+                                class="font-bold uppercase tracking-widest text-slate-700 group-hover:text-primary transition-colors">Transporte</span>
+                        </button>
+                        <button
+                            class="osi-layer w-full flex items-center gap-6 bg-slate-50 p-4 rounded-2xl hover:bg-primary/10 hover:scale-[1.02] transition-all border border-slate-100 active:scale-95 group shadow-sm"
+                            data-layer="3">
+                            <span class="w-10 font-black text-primary text-xl">03</span>
+                            <span
+                                class="font-bold uppercase tracking-widest text-slate-700 group-hover:text-primary transition-colors">Red</span>
+                        </button>
+                        <button
+                            class="osi-layer w-full flex items-center gap-6 bg-slate-50 p-4 rounded-2xl hover:bg-primary/10 hover:scale-[1.02] transition-all border border-slate-100 active:scale-95 group shadow-sm"
+                            data-layer="2">
+                            <span class="w-10 font-black text-primary text-xl">02</span>
+                            <span
+                                class="font-bold uppercase tracking-widest text-slate-700 group-hover:text-primary transition-colors">Enlace
+                                de Datos</span>
+                        </button>
+                        <button
+                            class="osi-layer w-full flex items-center gap-6 bg-slate-50 p-4 rounded-2xl hover:bg-primary/10 hover:scale-[1.02] transition-all border border-slate-100 active:scale-95 group shadow-sm"
+                            data-layer="1">
+                            <span class="w-10 font-black text-primary text-xl">01</span>
+                            <span
+                                class="font-bold uppercase tracking-widest text-slate-700 group-hover:text-primary transition-colors">Física</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Modelo TCP/IP -->
+            <section
+                class="relative py-32 px-12 md:px-24 min-h-screen flex flex-col justify-center overflow-hidden bg-surface text-white border-b border-white/5"
+                id="tcp-ip">
+                <div
+                    class="absolute font-display font-black text-[18rem] leading-none select-none pointer-events-none opacity-[0.05] z-0 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-5">
+                    TCP/IP</div>
+                <div
+                    class="max-w-6xl mx-auto relative z-10 w-full grid lg:grid-cols-2 gap-20 items-center scroll-reveal">
+                    <!-- Pila de Capas TCP/IP (Izquierda) -->
+                    <div class="space-y-4 py-8 order-2 lg:order-1" id="tcp-ip-layers-stack">
+                        <button
+                            class="tcp-ip-layer w-full flex items-center gap-6 bg-white/5 p-4 rounded-2xl hover:bg-primary/20 hover:scale-[1.02] transition-all border border-white/5 active:scale-95 group"
+                            data-layer="4">
+                            <span class="w-10 font-black text-primary text-xl">04</span>
+                            <span
+                                class="font-bold uppercase tracking-widest text-white group-hover:text-primary transition-colors">Aplicación</span>
+                        </button>
+                        <button
+                            class="tcp-ip-layer w-full flex items-center gap-6 bg-white/5 p-4 rounded-2xl hover:bg-primary/20 hover:scale-[1.02] transition-all border border-white/5 active:scale-95 group"
+                            data-layer="3">
+                            <span class="w-10 font-black text-primary text-xl">03</span>
+                            <span
+                                class="font-bold uppercase tracking-widest text-white group-hover:text-primary transition-colors">Transporte</span>
+                        </button>
+                        <button
+                            class="tcp-ip-layer w-full flex items-center gap-6 bg-white/5 p-4 rounded-2xl hover:bg-primary/20 hover:scale-[1.02] transition-all border border-white/5 active:scale-95 group"
+                            data-layer="2">
+                            <span class="w-10 font-black text-primary text-xl">02</span>
+                            <span
+                                class="font-bold uppercase tracking-widest text-white group-hover:text-primary transition-colors">Internet</span>
+                        </button>
+                        <button
+                            class="tcp-ip-layer w-full flex items-center gap-6 bg-white/5 p-4 rounded-2xl hover:bg-primary/20 hover:scale-[1.02] transition-all border border-white/5 active:scale-95 group"
+                            data-layer="1">
+                            <span class="w-10 font-black text-primary text-xl">01</span>
+                            <span
+                                class="font-bold uppercase tracking-widest text-white group-hover:text-primary transition-colors">Acceso
+                                a la Red</span>
+                        </button>
+                    </div>
+
+                    <div class="space-y-8 order-1 lg:order-2">
+                        <div class="w-20 h-2 bg-primary mb-8 ml-auto lg:mr-0"></div>
+                        <h2 class="font-display text-6xl font-black leading-tight text-right">Modelo TCP/IP</h2>
+                        <p class="text-slate-400 text-lg font-light leading-relaxed text-right">
+                            Es un protocolo de enlace de datos que se usa en Internet para que los ordenadores y
+                            otros dispositivos envíen y reciban datos. Posibilita que los dispositivos conectados a
+                            Internet se comuniquen entre sí en varias redes.
+                        </p>
+                        <!-- Panel de Información Dinámico TCP/IP -->
+                        <div class="bg-surface/50 border border-white/10 p-8 rounded-3xl min-h-[220px] flex items-center justify-center transition-all duration-500"
+                            id="tcp-ip-info-panel">
+                            <div class="text-center space-y-4">
+                                <span class="material-symbols-outlined text-5xl text-primary/30">info</span>
+                                <p class="text-slate-500 font-medium">Selecciona una capa para ver su detalle</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Protocolos de Comunicación -->
+            <section
+                class="relative py-32 px-12 md:px-24 min-h-screen flex flex-col justify-center overflow-hidden bg-white-soft text-slate-800 border-b border-slate-100"
+                id="comm-protocols">
+                <div
+                    class="max-w-6xl mx-auto relative z-10 w-full grid lg:grid-cols-2 gap-20 items-center scroll-reveal">
+                    <div class="space-y-8">
+                        <div class="w-20 h-2 bg-primary mb-8"></div>
+                        <h2 class="font-display text-5xl md:text-6xl font-black leading-tight text-secondary italic">
+                            Protocolos de Comunicación</h2>
+                        <p class="text-slate-600 text-lg font-light leading-relaxed">
+                            Es un sistema de reglas que permite que dos o más entidades de un sistema de comunicaciones
+                            transmitan información a través de cualquier tipo de variación de una cantidad física. Estas
+                            son las reglas o estándares que definen la sintaxis, la semántica y la sincronización de la
+                            comunicación y los posibles métodos de recuperación de errores.
+                        </p>
+                        <!-- Panel de Información de Protocolos -->
+                        <div class="bg-white border border-slate-200 p-8 rounded-3xl min-h-[350px] flex items-center justify-center transition-all duration-500 shadow-sm overflow-hidden"
+                            id="comm-info-panel">
+                            <div class="text-center space-y-4">
+                                <span class="material-symbols-outlined text-5xl text-primary/30">hub</span>
+                                <p class="text-slate-500 font-medium italic">"Selecciona una capa de la pila para
+                                    explorar su arquitectura y protocolos asociados"</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pila de Protocolos Interactiva -->
+                    <div class="space-y-4 py-8" id="comm-protocols-stack">
+                        <!-- Application Layer -->
+                        <button
+                            class="comm-layer w-full flex items-center gap-6 bg-slate-50 p-6 rounded-2xl hover:bg-primary/10 hover:scale-[1.02] transition-all border border-slate-100 active:scale-95 group shadow-sm"
+                            data-layer="application">
+                            <div
+                                class="flex flex-col items-center justify-center w-12 h-12 rounded-lg bg-white border border-slate-100 text-primary font-black">
+                                <span class="text-xs">L</span>
+                                <span class="text-lg leading-none">7-5</span>
+                            </div>
+                            <div class="text-left">
+                                <span
+                                    class="block font-black uppercase tracking-[0.2em] text-slate-700 group-hover:text-primary transition-colors text-sm">Capa
+                                    de Aplicación</span>
+                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">HTTP · DNS
+                                    · FTP · SMTP</span>
+                            </div>
+                        </button>
+
+                        <!-- Transport Layer -->
+                        <button
+                            class="comm-layer w-full flex items-center gap-6 bg-slate-50 p-6 rounded-2xl hover:bg-primary/10 hover:scale-[1.02] transition-all border border-slate-100 active:scale-95 group shadow-sm"
+                            data-layer="transport">
+                            <div
+                                class="flex flex-col items-center justify-center w-12 h-12 rounded-lg bg-white border border-slate-100 text-primary font-black">
+                                <span class="text-xs">L</span>
+                                <span class="text-lg leading-none">4</span>
+                            </div>
+                            <div class="text-left">
+                                <span
+                                    class="block font-black uppercase tracking-[0.2em] text-slate-700 group-hover:text-primary transition-colors text-sm">Capa
+                                    de Transporte</span>
+                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">TCP ·
+                                    UDP</span>
+                            </div>
+                        </button>
+
+                        <!-- Internet Layer -->
+                        <button
+                            class="comm-layer w-full flex items-center gap-6 bg-slate-50 p-6 rounded-2xl hover:bg-primary/10 hover:scale-[1.02] transition-all border border-slate-100 active:scale-95 group shadow-sm"
+                            data-layer="internet">
+                            <div
+                                class="flex flex-col items-center justify-center w-12 h-12 rounded-lg bg-white border border-slate-100 text-primary font-black">
+                                <span class="text-xs">L</span>
+                                <span class="text-lg leading-none">3</span>
+                            </div>
+                            <div class="text-left">
+                                <span
+                                    class="block font-black uppercase tracking-[0.2em] text-slate-700 group-hover:text-primary transition-colors text-sm">Capa
+                                    de Internet</span>
+                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">IP · ICMP ·
+                                    BGP · OSPF</span>
+                            </div>
+                        </button>
+
+                        <!-- Network Interface Layer -->
+                        <button
+                            class="comm-layer w-full flex items-center gap-6 bg-slate-50 p-6 rounded-2xl hover:bg-primary/10 hover:scale-[1.02] transition-all border border-slate-100 active:scale-95 group shadow-sm"
+                            data-layer="network">
+                            <div
+                                class="flex flex-col items-center justify-center w-12 h-12 rounded-lg bg-white border border-slate-100 text-primary font-black">
+                                <span class="text-xs">L</span>
+                                <span class="text-lg leading-none">2</span>
+                            </div>
+                            <div class="text-left">
+                                <span
+                                    class="block font-black uppercase tracking-[0.2em] text-slate-700 group-hover:text-primary transition-colors text-sm">Acceso
+                                    a la Red</span>
+                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">ARP · SLIP
+                                    · PPP · HARDWARE</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Servicios y Protocolos de Internet -->
+            <section
+                class="relative py-32 px-12 md:px-24 min-h-screen flex flex-col justify-center overflow-hidden bg-surface text-white"
+                id="web-services">
+                <div class="max-w-7xl mx-auto relative z-10 w-full scroll-reveal">
+                    <div class="text-center mb-16">
+                        <h2
+                            class="font-display text-5xl md:text-7xl font-black text-white italic uppercase leading-none mb-6">
+                            Servicios y <span class="text-primary tracking-tighter">Protocolos</span></h2>
+                        <p class="text-slate-400 max-w-3xl mx-auto text-lg font-light leading-relaxed">
+                            Desde la navegación web hasta el ecosistema de la nube, cada servicio se apoya en una
+                            arquitectura de capas bien definida.
+                        </p>
+                    </div>
+
+                    <!-- Catálogo de Servicios Web -->
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-24">
+                        <div
+                            class="p-6 bg-white/5 border border-white/10 rounded-2xl hover:border-primary/50 transition-all group">
+                            <span class="material-symbols-outlined text-primary mb-3 text-3xl">language</span>
+                            <h4 class="font-bold text-sm mb-1">Web (WWW)</h4>
+                            <p class="text-[10px] text-slate-500 uppercase font-black tracking-widest leading-tight">
+                                Hipertexto & World Wide Web</p>
+                        </div>
+                        <div
+                            class="p-6 bg-white/5 border border-white/10 rounded-2xl hover:border-primary/50 transition-all group">
+                            <span class="material-symbols-outlined text-primary mb-3 text-3xl">mail</span>
+                            <h4 class="font-bold text-sm mb-1">E-mail</h4>
+                            <p class="text-[10px] text-slate-500 uppercase font-black tracking-widest leading-tight">
+                                Protocolo SMTP / IMAP</p>
+                        </div>
+                        <div
+                            class="p-6 bg-white/5 border border-white/10 rounded-2xl hover:border-primary/50 transition-all group">
+                            <span class="material-symbols-outlined text-primary mb-3 text-3xl">folder_shared</span>
+                            <h4 class="font-bold text-sm mb-1">Archivos</h4>
+                            <p class="text-[10px] text-slate-500 uppercase font-black tracking-widest leading-tight">FTP
+                                & Transferencia P2P</p>
+                        </div>
+                        <div
+                            class="p-6 bg-white/5 border border-white/10 rounded-2xl hover:border-primary/50 transition-all group">
+                            <span class="material-symbols-outlined text-primary mb-3 text-3xl">forum</span>
+                            <h4 class="font-bold text-sm mb-1">Mensajería</h4>
+                            <p class="text-[10px] text-slate-500 uppercase font-black tracking-widest leading-tight">
+                                Chat Online (IRC, IM)</p>
+                        </div>
+                        <div
+                            class="p-6 bg-white/5 border border-white/10 rounded-2xl hover:border-primary/50 transition-all group">
+                            <span class="material-symbols-outlined text-primary mb-3 text-3xl">phone_in_talk</span>
+                            <h4 class="font-bold text-sm mb-1">VoIP</h4>
+                            <p class="text-[10px] text-slate-500 uppercase font-black tracking-widest leading-tight">
+                                Telefonía IP Digital</p>
+                        </div>
+                        <div
+                            class="p-6 bg-white/5 border border-white/10 rounded-2xl hover:border-primary/50 transition-all group">
+                            <span class="material-symbols-outlined text-primary mb-3 text-3xl">tv_gen</span>
+                            <h4 class="font-bold text-sm mb-1">IPTV</h4>
+                            <p class="text-[10px] text-slate-500 uppercase font-black tracking-widest leading-tight">
+                                Televisión Digital</p>
+                        </div>
+                        <div
+                            class="p-6 bg-white/5 border border-white/10 rounded-2xl hover:border-primary/50 transition-all group">
+                            <span class="material-symbols-outlined text-primary mb-3 text-3xl">terminal</span>
+                            <h4 class="font-bold text-sm mb-1">Acceso Remoto</h4>
+                            <p class="text-[10px] text-slate-500 uppercase font-black tracking-widest leading-tight">SSH
+                                & Telnet</p>
+                        </div>
+                        <div
+                            class="p-6 bg-white/5 border border-white/10 rounded-2xl hover:border-primary/50 transition-all group">
+                            <span class="material-symbols-outlined text-primary mb-3 text-3xl">sports_esports</span>
+                            <h4 class="font-bold text-sm mb-1">Gaming</h4>
+                            <p class="text-[10px] text-slate-500 uppercase font-black tracking-widest leading-tight">
+                                Multijugador en Línea</p>
+                        </div>
+                        <div
+                            class="p-6 bg-white/5 border border-white/10 rounded-2xl hover:border-primary/50 transition-all group">
+                            <span class="material-symbols-outlined text-primary mb-3 text-3xl">cloud</span>
+                            <h4 class="font-bold text-sm mb-1">Infraestructura</h4>
+                            <p class="text-[10px] text-slate-500 uppercase font-black tracking-widest leading-tight">
+                                Servicios de Nube (Cloud)</p>
+                        </div>
+                        <div
+                            class="p-6 bg-primary/20 border border-primary/40 rounded-2xl hover:border-primary transition-all group flex items-center justify-center">
+                            <span
+                                class="material-symbols-outlined text-white text-4xl group-hover:scale-110 transition-transform">hub</span>
+                        </div>
+                    </div>
+
+                    <!-- Comparativa de Modelos OSI vs TCP/IP -->
+                    <div class="space-y-12">
+                        <div class="flex items-center gap-4 border-b border-white/10 pb-4">
+                            <span class="w-3 h-3 bg-primary rounded-full"></span>
+                            <h3 class="text-2xl font-black uppercase tracking-widest italic">Comparativa OSI vs DoD
+                                (TCP/IP)</h3>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-6" id="comparison-grid">
+                            <!-- OSI Layout Column -->
+                            <div class="md:col-span-1 space-y-4">
+                                <h5
+                                    class="text-center text-[10px] font-black text-slate-500 uppercase tracking-widest mb-6">
+                                    Modelo OSI (7 Capas)</h5>
+                                <div class="space-y-4">
+                                    <div class="osi-card-mini p-4 bg-pink-500/10 border-l-4 border-pink-500 rounded-lg hover:scale-105 transition-all cursor-help"
+                                        data-osi="7">
+                                        <span class="block text-[8px] font-bold text-pink-400">7. APLICACIÓN</span>
+                                        <p class="text-xs font-black uppercase tracking-tighter">Scribe / El Escriba</p>
+                                    </div>
+                                    <div class="osi-card-mini p-4 bg-orange-500/10 border-l-4 border-orange-500 rounded-lg hover:scale-105 transition-all cursor-help"
+                                        data-osi="6">
+                                        <span class="block text-[8px] font-bold text-orange-400">6. PRESENTACIÓN</span>
+                                        <p class="text-xs font-black uppercase tracking-tighter">Translator / Traductor
+                                        </p>
+                                    </div>
+                                    <div class="osi-card-mini p-4 bg-yellow-500/10 border-l-4 border-yellow-500 rounded-lg hover:scale-105 transition-all cursor-help"
+                                        data-osi="5">
+                                        <span class="block text-[8px] font-bold text-yellow-400">5. SESIÓN</span>
+                                        <p class="text-xs font-black uppercase tracking-tighter">Negotiator / Negociador
+                                        </p>
+                                    </div>
+                                    <div class="osi-card-mini p-4 bg-green-500/10 border-l-4 border-green-500 rounded-lg hover:scale-105 transition-all cursor-help"
+                                        data-osi="4">
+                                        <span class="block text-[8px] font-bold text-green-400">4. TRANSPORTE</span>
+                                        <p class="text-xs font-black uppercase tracking-tighter">Middle Manager /
+                                            Gerente</p>
+                                    </div>
+                                    <div class="osi-card-mini p-4 bg-blue-500/10 border-l-4 border-blue-500 rounded-lg hover:scale-105 transition-all cursor-help"
+                                        data-osi="3">
+                                        <span class="block text-[8px] font-bold text-blue-400">3. RED</span>
+                                        <p class="text-xs font-black uppercase tracking-tighter">Mail Room Guy / Cartero
+                                        </p>
+                                    </div>
+                                    <div class="osi-card-mini p-4 bg-purple-500/10 border-l-4 border-purple-500 rounded-lg hover:scale-105 transition-all cursor-help"
+                                        data-osi="2">
+                                        <span class="block text-[8px] font-bold text-purple-400">2. ENLACE</span>
+                                        <p class="text-xs font-black uppercase tracking-tighter">Envelope Stuffer /
+                                            Sellador</p>
+                                    </div>
+                                    <div class="osi-card-mini p-4 bg-cyan-500/10 border-l-4 border-cyan-500 rounded-lg hover:scale-105 transition-all cursor-help"
+                                        data-osi="1">
+                                        <span class="block text-[8px] font-bold text-cyan-400">1. FÍSICA</span>
+                                        <p class="text-xs font-black uppercase tracking-tighter">The Truck / El Camión
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- TCP/IP Comparison Hub -->
+                            <div class="md:col-span-3">
+                                <h5
+                                    class="text-center text-[10px] font-black text-slate-500 uppercase tracking-widest mb-6">
+                                    Modelo TCP/IP DoD (Servicios y Puertos)</h5>
+                                <div class="grid grid-rows-4 gap-4 h-full min-h-[600px]" id="comparison-details-hub">
+                                    <!-- Dynamic content will be injected or maintained via CSS structure -->
+                                    <div class="service-layer-row bg-white/5 border border-white/10 rounded-2xl p-6 flex items-center justify-between group hover:bg-white/10 transition-all overflow-hidden relative"
+                                        data-tcp-layer="application">
+                                        <div class="absolute left-0 top-0 h-full w-1 bg-primary"></div>
+                                        <div class="w-1/4">
+                                            <span class="text-[9px] font-black text-primary uppercase">Capa
+                                                Aplicación</span>
+                                            <h6 class="font-bold text-lg leading-tight">Servicios de Capas 5, 6, 7</h6>
+                                            <p class="text-[9px] text-slate-500 uppercase tracking-widest mt-1">PDU:
+                                                Data</p>
+                                        </div>
+                                        <div class="flex-1 grid grid-cols-2 gap-4 px-8">
+                                            <div class="text-[10px] space-y-1">
+                                                <p><span class="text-primary font-bold">HTTP:</span> port 80</p>
+                                                <p><span class="text-primary font-bold">HTTPS/TLS:</span> port 443</p>
+                                                <p><span class="text-primary font-bold">FTP:</span> port 21, 20</p>
+                                                <p><span class="text-primary font-bold">SSH:</span> port 22</p>
+                                            </div>
+                                            <div class="text-[10px] space-y-1">
+                                                <p><span class="text-primary font-bold">DNS:</span> port 53</p>
+                                                <p><span class="text-primary font-bold">DHCP:</span> port 67, 68</p>
+                                                <p><span class="text-primary font-bold">SMTP:</span> port 25</p>
+                                                <p><span class="text-primary font-bold">Syslog:</span> port 514</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="service-layer-row bg-white/5 border border-white/10 rounded-2xl p-6 flex items-center justify-between group hover:bg-white/10 transition-all overflow-hidden relative"
+                                        data-tcp-layer="transport">
+                                        <div class="absolute left-0 top-0 h-full w-1 bg-green-500"></div>
+                                        <div class="w-1/4">
+                                            <span class="text-[9px] font-black text-green-500 uppercase">Capa
+                                                Transporte</span>
+                                            <h6 class="font-bold text-lg leading-tight">Host to Host (L4)</h6>
+                                            <p class="text-[9px] text-slate-500 uppercase tracking-widest mt-1">PDU:
+                                                Segments</p>
+                                        </div>
+                                        <div class="flex-1 flex gap-8 px-8 items-center">
+                                            <div
+                                                class="bg-white/5 p-4 rounded-xl flex-1 text-center border border-white/5 group-hover:border-green-500/50">
+                                                <span class="block text-xl font-black text-white">TCP</span>
+                                                <span
+                                                    class="text-[9px] text-slate-400 font-bold uppercase mt-1">Protocolo
+                                                    6</span>
+                                            </div>
+                                            <div
+                                                class="bg-white/5 p-4 rounded-xl flex-1 text-center border border-white/5 group-hover:border-green-500/50">
+                                                <span class="block text-xl font-black text-white">UDP</span>
+                                                <span
+                                                    class="text-[9px] text-slate-400 font-bold uppercase mt-1">Protocolo
+                                                    17</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="service-layer-row bg-white/5 border border-white/10 rounded-2xl p-6 flex items-center justify-between group hover:bg-white/10 transition-all overflow-hidden relative"
+                                        data-tcp-layer="internet">
+                                        <div class="absolute left-0 top-0 h-full w-1 bg-blue-500"></div>
+                                        <div class="w-1/4">
+                                            <span class="text-[9px] font-black text-blue-500 uppercase">Capa
+                                                Internet</span>
+                                            <h6 class="font-bold text-lg leading-tight">Network Layer (L3)</h6>
+                                            <p class="text-[9px] text-slate-500 uppercase tracking-widest mt-1">PDU:
+                                                Packets</p>
+                                        </div>
+                                        <div class="flex-1 text-center px-8">
+                                            <div class="p-4 bg-blue-500/20 rounded-2xl border border-blue-500/30">
+                                                <span class="text-3xl font-black text-white tracking-[0.2em]">IP
+                                                    (IPv4/IPv6)</span>
+                                                <p
+                                                    class="text-[10px] text-slate-400 uppercase font-black mt-2 tracking-widest italic">
+                                                    Routing & Addressing</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="service-layer-row bg-white/5 border border-white/10 rounded-2xl p-6 flex items-center justify-between group hover:bg-white/10 transition-all overflow-hidden relative"
+                                        data-tcp-layer="network">
+                                        <div class="absolute left-0 top-0 h-full w-1 bg-purple-500"></div>
+                                        <div class="w-1/4">
+                                            <span class="text-[9px] font-black text-purple-500 uppercase">Acceso a
+                                                Red</span>
+                                            <h6 class="font-bold text-lg leading-tight">Layers 1 & 2</h6>
+                                            <p class="text-[9px] text-slate-500 uppercase tracking-widest mt-1">PDU:
+                                                Frame / Bits</p>
+                                        </div>
+                                        <div class="flex-1 grid grid-cols-2 gap-4 px-8 items-center text-center">
+                                            <div class="space-y-1">
+                                                <span class="block text-xs font-bold text-white uppercase">Ethernet,
+                                                    PPP</span>
+                                                <span
+                                                    class="block text-[8px] text-slate-500 font-black tracking-widest uppercase italic">Frames</span>
+                                            </div>
+                                            <div class="space-y-1">
+                                                <span class="block text-xs font-bold text-white uppercase">Electrons,
+                                                    RF, Light</span>
+                                                <span
+                                                    class="block text-[8px] text-slate-500 font-black tracking-widest uppercase italic">Bits
+                                                    Stream</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Puertos de Red -->
+            <section
+                class="relative py-32 px-12 md:px-24 min-h-screen flex flex-col justify-center overflow-hidden bg-white-soft text-slate-800 border-b border-slate-100"
+                id="ports">
+                <div class="max-w-6xl mx-auto relative z-10 w-full scroll-reveal">
+                    <!-- Título y Definición -->
+                    <div class="grid lg:grid-cols-2 gap-16 items-center mb-24">
+                        <div class="space-y-8">
+                            <div class="w-20 h-2 bg-primary mb-8"></div>
+                            <h2
+                                class="font-display text-5xl md:text-7xl font-black text-secondary italic uppercase leading-none">
+                                Puertos de <span class="text-primary">Red</span></h2>
+                            <div class="space-y-6 text-slate-600 text-lg font-light leading-relaxed">
+                                <p>
+                                    En la suite de protocolos de Internet, un puerto es un punto final (endpoint) de
+                                    comunicación en un sistema operativo. Mientras que el término también se usa para
+                                    conectores físicos, en software es un <span
+                                        class="font-bold text-secondary">constructo lógico</span> que identifica un
+                                    proceso específico o tipo de servicio de red.
+                                </p>
+                                <p>
+                                    Un puerto siempre está asociado con una dirección IP y un tipo de protocolo,
+                                    completando la dirección de origen o destino de una sesión de comunicación. Se
+                                    identifica mediante un número de <span class="font-bold text-secondary">16
+                                        bits</span>.
+                                </p>
+                            </div>
+                        </div>
+                        <!-- Visualizador de Rangos -->
+                        <div
+                            class="bg-secondary p-12 rounded-[3rem] shadow-2xl border border-white/5 relative overflow-hidden group">
+                            <div class="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[100px] -mr-32 -mt-32">
+                            </div>
+                            <h4
+                                class="text-white font-black uppercase text-xs tracking-[0.3em] mb-10 border-l-4 border-primary pl-4">
+                                Rangos de Puertos</h4>
+                            <div class="space-y-8">
+                                <div class="relative">
+                                    <div
+                                        class="flex justify-between text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">
+                                        <span>Well-Known Ports</span>
+                                        <span class="text-primary">1 - 1024</span>
+                                    </div>
+                                    <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+                                        <div class="h-full bg-primary w-[20%]"></div>
+                                    </div>
+                                </div>
+                                <div class="relative">
+                                    <div
+                                        class="flex justify-between text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">
+                                        <span>Registered Ports</span>
+                                        <span class="text-primary">1025 - 49151</span>
+                                    </div>
+                                    <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+                                        <div class="h-full bg-primary/60 w-[60%]"></div>
+                                    </div>
+                                </div>
+                                <div class="relative">
+                                    <div
+                                        class="flex justify-between text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">
+                                        <span>Dynamic / Private</span>
+                                        <span class="text-primary">49152 - 65535</span>
+                                    </div>
+                                    <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+                                        <div class="h-full bg-primary/30 w-[20%]"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p
+                                class="text-[9px] text-slate-500 text-center mt-8 uppercase font-bold tracking-[0.2em] italic">
+                                Total: 65,535 Puertos Lógicos</p>
+                        </div>
+                    </div>
+
+                    <!-- Cuadrícula de Puertos Comunes -->
+                    <div class="space-y-12">
+                        <div class="flex items-center gap-4 border-b border-slate-200 pb-4">
+                            <span class="w-3 h-3 bg-primary rounded-full"></span>
+                            <h3 class="text-2xl font-black uppercase tracking-widest italic text-secondary">Puertos y
+                                Servicios Comunes</h3>
+                        </div>
+
+                        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4" id="ports-grid">
+                            <!-- Port Card: FTP -->
+                            <div class="port-card bg-white border border-slate-200 p-6 rounded-2xl hover:border-primary/50 hover:shadow-xl transition-all group text-center cursor-default"
+                                data-port="21">
+                                <span
+                                    class="block text-3xl font-black text-secondary group-hover:text-primary transition-colors">21</span>
+                                <span
+                                    class="block text-[10px] font-bold text-primary uppercase tracking-widest mt-2">FTP</span>
+                            </div>
+                            <!-- Port Card: SSH -->
+                            <div class="port-card bg-white border border-slate-200 p-6 rounded-2xl hover:border-primary/50 hover:shadow-xl transition-all group text-center cursor-default"
+                                data-port="22">
+                                <span
+                                    class="block text-3xl font-black text-secondary group-hover:text-primary transition-colors">22</span>
+                                <span
+                                    class="block text-[10px] font-bold text-primary uppercase tracking-widest mt-2">SSH</span>
+                            </div>
+                            <!-- Port Card: Telnet -->
+                            <div class="port-card bg-white border border-slate-200 p-6 rounded-2xl hover:border-primary/50 hover:shadow-xl transition-all group text-center cursor-default"
+                                data-port="23">
+                                <span
+                                    class="block text-3xl font-black text-secondary group-hover:text-primary transition-colors">23</span>
+                                <span
+                                    class="block text-[10px] font-bold text-primary uppercase tracking-widest mt-2">Telnet</span>
+                            </div>
+                            <!-- Port Card: SMTP -->
+                            <div class="port-card bg-white border border-slate-200 p-6 rounded-2xl hover:border-primary/50 hover:shadow-xl transition-all group text-center cursor-default"
+                                data-port="25">
+                                <span
+                                    class="block text-3xl font-black text-secondary group-hover:text-primary transition-colors">25</span>
+                                <span
+                                    class="block text-[10px] font-bold text-primary uppercase tracking-widest mt-2">SMTP</span>
+                            </div>
+                            <!-- Port Card: DNS -->
+                            <div class="port-card bg-white border border-slate-200 p-6 rounded-2xl hover:border-primary/50 hover:shadow-xl transition-all group text-center cursor-default"
+                                data-port="53">
+                                <span
+                                    class="block text-3xl font-black text-secondary group-hover:text-primary transition-colors">53</span>
+                                <span
+                                    class="block text-[10px] font-bold text-primary uppercase tracking-widest mt-2">DNS</span>
+                            </div>
+                            <!-- Port Card: HTTP -->
+                            <div class="port-card bg-white border border-slate-200 p-6 rounded-2xl hover:border-primary/50 hover:shadow-xl transition-all group text-center cursor-default"
+                                data-port="80">
+                                <span
+                                    class="block text-3xl font-black text-secondary group-hover:text-primary transition-colors">80</span>
+                                <span
+                                    class="block text-[10px] font-bold text-primary uppercase tracking-widest mt-2">HTTP</span>
+                            </div>
+                            <!-- Port Card: POP3 -->
+                            <div class="port-card bg-white border border-slate-200 p-6 rounded-2xl hover:border-primary/50 hover:shadow-xl transition-all group text-center cursor-default"
+                                data-port="110">
+                                <span
+                                    class="block text-3xl font-black text-secondary group-hover:text-primary transition-colors">110</span>
+                                <span
+                                    class="block text-[10px] font-bold text-primary uppercase tracking-widest mt-2">POP3</span>
+                            </div>
+                            <!-- Port Card: NNTP -->
+                            <div class="port-card bg-white border border-slate-200 p-6 rounded-2xl hover:border-primary/50 hover:shadow-xl transition-all group text-center cursor-default"
+                                data-port="119">
+                                <span
+                                    class="block text-3xl font-black text-secondary group-hover:text-primary transition-colors">119</span>
+                                <span
+                                    class="block text-[10px] font-bold text-primary uppercase tracking-widest mt-2">NNTP</span>
+                            </div>
+                            <!-- Port Card: NTP -->
+                            <div class="port-card bg-white border border-slate-200 p-6 rounded-2xl hover:border-primary/50 hover:shadow-xl transition-all group text-center cursor-default"
+                                data-port="123">
+                                <span
+                                    class="block text-3xl font-black text-secondary group-hover:text-primary transition-colors">123</span>
+                                <span
+                                    class="block text-[10px] font-bold text-primary uppercase tracking-widest mt-2">NTP</span>
+                            </div>
+                            <!-- Port Card: IMAP -->
+                            <div class="port-card bg-white border border-slate-200 p-6 rounded-2xl hover:border-primary/50 hover:shadow-xl transition-all group text-center cursor-default"
+                                data-port="143">
+                                <span
+                                    class="block text-3xl font-black text-secondary group-hover:text-primary transition-colors">143</span>
+                                <span
+                                    class="block text-[10px] font-bold text-primary uppercase tracking-widest mt-2">IMAP</span>
+                            </div>
+                            <!-- Port Card: SNMP -->
+                            <div class="port-card bg-white border border-slate-200 p-6 rounded-2xl hover:border-primary/50 hover:shadow-xl transition-all group text-center cursor-default"
+                                data-port="161">
+                                <span
+                                    class="block text-3xl font-black text-secondary group-hover:text-primary transition-colors">161</span>
+                                <span
+                                    class="block text-[10px] font-bold text-primary uppercase tracking-widest mt-2">SNMP</span>
+                            </div>
+                            <!-- Port Card: IRC -->
+                            <div class="port-card bg-white border border-slate-200 p-6 rounded-2xl hover:border-primary/50 hover:shadow-xl transition-all group text-center cursor-default"
+                                data-port="194">
+                                <span
+                                    class="block text-3xl font-black text-secondary group-hover:text-primary transition-colors">194</span>
+                                <span
+                                    class="block text-[10px] font-bold text-primary uppercase tracking-widest mt-2">IRC</span>
+                            </div>
+                            <!-- Port Card: HTTPS -->
+                            <div class="port-card bg-white border border-slate-200 p-6 rounded-2xl hover:border-primary/50 hover:shadow-xl transition-all group text-center cursor-default"
+                                data-port="443">
+                                <span
+                                    class="block text-3xl font-black text-secondary group-hover:text-primary transition-colors">443</span>
+                                <span
+                                    class="block text-[10px] font-bold text-primary uppercase tracking-widest mt-2">HTTPS</span>
+                            </div>
+                            <!-- Empty spacer to align or extra card -->
+                            <div
+                                class="hidden lg:flex p-6 rounded-2xl items-center justify-center border border-dashed border-slate-200 opacity-50">
+                                <span class="material-symbols-outlined text-slate-300">more_horiz</span>
+                            </div>
+                        </div>
+
+                        <!-- Port Detail Panel (New) -->
+                        <div id="port-detail-container"
+                            class="mt-8 transition-all duration-500 opacity-0 scale-95 h-0 overflow-hidden">
+                            <div
+                                class="bg-white/80 backdrop-blur-md border border-slate-200 rounded-[2.5rem] p-8 md:p-12 shadow-inner relative">
+                                <div class="absolute top-8 right-8 text-[4rem] font-black text-slate-100 italic select-none"
+                                    id="detail-port-number">80</div>
+                                <div
+                                    class="relative z-10 flex flex-col md:flex-row gap-8 items-center md:items-start text-center md:text-left">
+                                    <div
+                                        class="w-24 h-24 bg-primary/10 rounded-3xl flex items-center justify-center text-primary flex-shrink-0">
+                                        <span class="material-symbols-outlined text-4xl">settings_input_component</span>
+                                    </div>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <h4 class="text-3xl font-black text-secondary uppercase italic"
+                                                id="detail-port-name">HTTP</h4>
+                                            <span class="text-[10px] text-primary font-bold uppercase tracking-[0.3em]"
+                                                id="detail-port-sigla-meaning">Hypertext Transfer Protocol</span>
+                                        </div>
+                                        <p class="text-slate-600 leading-relaxed italic text-lg max-w-2xl"
+                                            id="detail-port-desc">
+                                            La base de cualquier intercambio de datos en la World Wide Web.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dirección IP: Clases y Evolución -->
+            <section
+                class="relative py-32 px-12 md:px-24 min-h-screen flex flex-col justify-center overflow-hidden bg-secondary text-white"
+                id="ip">
+                <!-- Background Decor -->
+                <div class="absolute inset-0 opacity-10 pointer-events-none overflow-hidden">
+                    <div class="absolute top-0 right-0 text-[30rem] font-black italic select-none -mr-20 -mt-20">IP
+                    </div>
+                </div>
+
+                <div class="max-w-7xl mx-auto relative z-10 w-full scroll-reveal">
+                    <div class="text-center mb-16">
+                        <h2
+                            class="font-display text-5xl md:text-7xl font-black text-white italic uppercase leading-none mb-6">
+                            Dirección <span class="text-primary">IP</span></h2>
+                        <p class="text-slate-400 max-w-3xl mx-auto text-lg font-light leading-relaxed">
+                            El sistema de identificación numérica que permite que miles de millones de dispositivos se
+                            localicen y comuniquen en la red global.
+                        </p>
+                    </div>
+
+                    <!-- IPv4 vs IPv6 Intro Cards -->
+                    <div class="grid md:grid-cols-2 gap-8 mb-24">
+                        <div
+                            class="p-10 bg-white/5 border border-white/10 rounded-[3rem] hover:bg-white/10 transition-all group">
+                            <span
+                                class="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-4 block">Estándar
+                                Actual</span>
+                            <h3 class="text-4xl font-black italic mb-4">IPv4</h3>
+                            <div class="flex items-end gap-2 mb-6">
+                                <span class="text-5xl font-mono font-black text-white">32</span>
+                                <span
+                                    class="text-sm font-bold text-slate-500 mb-2 uppercase tracking-widest italic">Bits</span>
+                            </div>
+                            <p class="text-slate-400 text-sm leading-relaxed mb-6">Direccionamiento basado en decimales
+                                y dividido en octetos. Proporción finita de aproximadamente 4.3 mil millones de
+                                direcciones.</p>
+                            <div
+                                class="p-4 bg-black/30 rounded-2xl border border-white/5 font-mono text-center text-primary group-hover:scale-105 transition-transform">
+                                192.168.10.1
+                            </div>
+                        </div>
+                        <div
+                            class="p-10 bg-primary/10 border border-primary/20 rounded-[3rem] hover:bg-primary/20 transition-all group relative overflow-hidden">
+                            <div
+                                class="absolute -right-4 -bottom-4 text-white/5 text-9xl font-black pointer-events-none">
+                                NEXT</div>
+                            <span
+                                class="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-4 block">Nueva
+                                Generación</span>
+                            <h3 class="text-4xl font-black italic mb-4">IPv6</h3>
+                            <div class="flex items-end gap-2 mb-6">
+                                <span class="text-5xl font-mono font-black text-white">128</span>
+                                <span
+                                    class="text-sm font-bold text-slate-500 mb-2 uppercase tracking-widest italic">Bits</span>
+                            </div>
+                            <p class="text-slate-400 text-sm leading-relaxed mb-6">Direccionamiento hexadecimal para una
+                                capacidad astronómica de direcciones, eliminando la necesidad de NAT.</p>
+                            <div
+                                class="p-4 bg-black/30 rounded-2xl border border-white/5 font-mono text-center text-primary group-hover:scale-105 transition-transform truncate px-4">
+                                2001:0db8:85a3:0000:0000:8a2e:0370:7334
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Clases de Direcciones IP (Basado en la diapositiva) -->
+                    <div class="space-y-12">
+                        <div class="flex items-center gap-4 border-b border-white/10 pb-4">
+                            <span class="w-3 h-3 bg-primary rounded-full animate-pulse"></span>
+                            <h3 class="text-2xl font-black uppercase tracking-widest italic">Clasificación de
+                                Direcciones (IPv4 Classes)</h3>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-5 gap-6" id="ip-classes-grid">
+                            <!-- Clase A -->
+                            <div class="ip-class-card p-8 bg-white/5 border border-white/10 rounded-[2.5rem] hover:border-blue-500/50 transition-all group cursor-pointer"
+                                data-ip-class="A">
+                                <div class="flex justify-between items-start mb-6">
+                                    <h4 class="text-4xl font-black italic text-blue-500">A</h4>
+                                    <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest">Leading
+                                        Bit: 0</span>
+                                </div>
+                                <div class="space-y-4">
+                                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Rango
+                                        de Red</div>
+                                    <div class="text-xs font-mono font-black border-l-2 border-blue-500 pl-3">0.0.0.0
+                                        <span class="text-slate-600">—</span> 127.255.255.255
+                                    </div>
+                                    <div class="mt-6 pt-6 border-t border-white/5">
+                                        <div class="flex justify-between text-[9px] font-black uppercase mb-2">
+                                            <span>Network</span><span>Host</span>
+                                        </div>
+                                        <div class="flex h-1.5 rounded-full overflow-hidden bg-white/10">
+                                            <div class="w-1/4 bg-blue-500"></div>
+                                            <div class="w-3/4 bg-slate-700"></div>
+                                        </div>
+                                        <div class="flex justify-between text-[8px] text-slate-500 mt-2 italic">
+                                            <span>7 Bits</span><span>24 Bits</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Clase B -->
+                            <div class="ip-class-card p-8 bg-white/5 border border-white/10 rounded-[2.5rem] hover:border-green-500/50 transition-all group cursor-pointer"
+                                data-ip-class="B">
+                                <div class="flex justify-between items-start mb-6">
+                                    <h4 class="text-4xl font-black italic text-green-500">B</h4>
+                                    <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest">Leading
+                                        Bits: 1 0</span>
+                                </div>
+                                <div class="space-y-4">
+                                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Rango
+                                        de Red</div>
+                                    <div class="text-xs font-mono font-black border-l-2 border-green-500 pl-3">128.0.0.0
+                                        <span class="text-slate-600">—</span> 191.255.255.255
+                                    </div>
+                                    <div class="mt-6 pt-6 border-t border-white/5">
+                                        <div class="flex justify-between text-[9px] font-black uppercase mb-2">
+                                            <span>Network</span><span>Host</span>
+                                        </div>
+                                        <div class="flex h-1.5 rounded-full overflow-hidden bg-white/10">
+                                            <div class="w-2/4 bg-green-500"></div>
+                                            <div class="w-2/4 bg-slate-700"></div>
+                                        </div>
+                                        <div class="flex justify-between text-[8px] text-slate-500 mt-2 italic">
+                                            <span>14 Bits</span><span>16 Bits</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Clase C -->
+                            <div class="ip-class-card p-8 bg-white/5 border border-white/10 rounded-[2.5rem] hover:border-yellow-500/50 transition-all group cursor-pointer"
+                                data-ip-class="C">
+                                <div class="flex justify-between items-start mb-6">
+                                    <h4 class="text-4xl font-black italic text-yellow-500">C</h4>
+                                    <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest">Leading
+                                        Bits: 1 1 0</span>
+                                </div>
+                                <div class="space-y-4">
+                                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Rango
+                                        de Red</div>
+                                    <div class="text-xs font-mono font-black border-l-2 border-yellow-500 pl-3">
+                                        192.0.0.0 <span class="text-slate-600">—</span> 223.255.255.255</div>
+                                    <div class="mt-6 pt-6 border-t border-white/5">
+                                        <div class="flex justify-between text-[9px] font-black uppercase mb-2">
+                                            <span>Network</span><span>Host</span>
+                                        </div>
+                                        <div class="flex h-1.5 rounded-full overflow-hidden bg-white/10">
+                                            <div class="w-3/4 bg-yellow-500"></div>
+                                            <div class="w-1/4 bg-slate-700"></div>
+                                        </div>
+                                        <div class="flex justify-between text-[8px] text-slate-500 mt-2 italic">
+                                            <span>21 Bits</span><span>8 Bits</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Clase D -->
+                            <div class="ip-class-card p-8 bg-white/5 border border-white/10 rounded-[2.5rem] hover:border-purple-500/50 transition-all group cursor-pointer"
+                                data-ip-class="D">
+                                <div class="flex justify-between items-start mb-6">
+                                    <h4 class="text-4xl font-black italic text-purple-500">D</h4>
+                                    <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest">Leading
+                                        Bits: 1 1 1 0</span>
+                                </div>
+                                <div class="space-y-4">
+                                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
+                                        Dirección de Grupo</div>
+                                    <div class="text-xs font-mono font-black border-l-2 border-purple-500 pl-3">
+                                        224.0.0.0 <span class="text-slate-600">—</span> 239.255.255.255</div>
+                                    <div class="mt-8">
+                                        <div
+                                            class="inline-block px-3 py-1 bg-purple-500/20 rounded-full text-[8px] font-black text-purple-400 uppercase tracking-widest">
+                                            Multicast</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Clase E -->
+                            <div class="ip-class-card p-8 bg-white/5 border border-white/10 rounded-[2.5rem] hover:border-red-500/50 transition-all group cursor-pointer"
+                                data-ip-class="E">
+                                <div class="flex justify-between items-start mb-6">
+                                    <h4 class="text-4xl font-black italic text-red-500">E</h4>
+                                    <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest">Leading
+                                        Bits: 1 1 1 1 0</span>
+                                </div>
+                                <div class="space-y-4">
+                                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
+                                        Indefinido</div>
+                                    <div class="text-xs font-mono font-black border-l-2 border-red-500 pl-3">240.0.0.0
+                                        <span class="text-slate-600">—</span> 247.255.255.255
+                                    </div>
+                                    <div class="mt-8">
+                                        <div
+                                            class="inline-block px-3 py-1 bg-red-500/20 rounded-full text-[8px] font-black text-red-400 uppercase tracking-widest">
+                                            Future Use & Experimental</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Petición Web -->
+            <section
+                class="relative py-32 px-12 md:px-24 min-h-screen flex flex-col justify-center overflow-hidden bg-white-soft text-slate-800 border-y border-slate-100"
+                id="request">
+                <div
+                    class="absolute font-display font-black text-[18rem] leading-none select-none pointer-events-none opacity-[0.05] z-0 -top-20 -left-20 text-slate-100">
+                    FLOW</div>
+                <div class="max-w-6xl mx-auto relative z-10 w-full scroll-reveal">
+                    <div class="bg-secondary rounded-[4rem] p-16 md:p-24 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-64 h-64 bg-primary/20 blur-[120px]"></div>
+                        <div class="relative z-10 text-center mb-12">
+                            <h2 class="font-display text-5xl font-black text-white mb-4">Petición Web</h2>
+                            <p class="text-slate-400">El viaje del dato desde el clic hasta la pantalla.</p>
+                        </div>
+                        <div class="relative flex justify-center items-center">
+                            <img src="images/request.png" alt="Esquema de Petición Web"
+                                class="max-w-full h-auto rounded-3xl shadow-2xl border border-white/5 transition-transform hover:scale-[1.01] duration-500">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Arquitectura Cliente-Servidor -->
+            <section class="section-strip bg-surface border-y border-white/5" id="client-server">
+                <div class="max-w-6xl mx-auto relative z-10 w-full scroll-reveal text-center space-y-12">
+                    <div class="space-y-6">
+                        <h2 class="font-display text-6xl font-black text-white italic">Cliente - Servidor</h2>
+                        <p class="text-slate-400 text-xl leading-relaxed max-w-4xl mx-auto font-light">
+                            En una arquitectura Cliente-Servidor existe un servidor y múltiples clientes que se conectan
+                            al servidor para recuperar todos los recursos necesarios para funcionar, en este sentido, el
+                            cliente solo es una capa para representar los datos y se detonan acciones para modificar el
+                            estado del servidor, mientras que el servidor es el que hace todo el trabajo pesado.
+                        </p>
+                    </div>
+                    <div class="relative flex justify-center">
+                        <img src="images/arq.png" alt="Arquitectura Cliente-Servidor"
+                            class="max-w-4xl h-auto rounded-[3rem] shadow-2xl border border-white/5 transition-all duration-700 hover:scale-[1.02]">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Arquitectura a Tres Capas -->
+            <section
+                class="relative py-32 px-12 md:px-24 min-h-screen flex flex-col justify-center overflow-hidden bg-white-soft text-slate-800"
+                id="three-tier">
+                <div class="max-w-7xl mx-auto relative z-10 w-full scroll-reveal">
+                    <div class="text-center mb-16">
+                        <h2
+                            class="font-display text-5xl md:text-7xl font-black text-secondary italic uppercase leading-none mb-6">
+                            Arquitectura <span class="text-primary tracking-tighter">3-Capas</span></h2>
+                        <p class="text-slate-600 max-w-3xl mx-auto text-lg font-light leading-relaxed">
+                            La base fundamental para construir aplicaciones modernas, escalables y fáciles de mantener,
+                            dividiendo las responsabilidades en compartimentos especializados.
+                        </p>
+                    </div>
+
+                    <div class="grid lg:grid-cols-2 gap-16 items-center">
+                        <!-- Infografía de Capas -->
+                        <div class="space-y-6">
+                            <!-- Presentation Tier -->
+                            <div class="tier-card p-8 bg-white border border-slate-200 rounded-[2.5rem] hover:shadow-2xl hover:-translate-y-2 transition-all group relative overflow-hidden"
+                                data-tier="presentation">
+                                <div
+                                    class="absolute right-0 top-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                                    <span class="material-symbols-outlined text-6xl text-primary">devices</span>
+                                </div>
+                                <h4 class="text-primary font-black uppercase text-[10px] tracking-[0.4em] mb-2">Capa 1
+                                </h4>
+                                <h3 class="text-2xl font-black text-secondary mb-4 uppercase italic">Presentation Tier
+                                </h3>
+                                <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                                    Es la cara visible de la aplicación. Su función principal es traducir las tareas y
+                                    resultados a algo que el usuario pueda comprender e interactuar.
+                                </p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span
+                                        class="px-3 py-1 bg-slate-100 rounded-full text-[9px] font-bold text-slate-500 uppercase tracking-widest">HTML5</span>
+                                    <span
+                                        class="px-3 py-1 bg-slate-100 rounded-full text-[9px] font-bold text-slate-500 uppercase tracking-widest">CSS3</span>
+                                    <span
+                                        class="px-3 py-1 bg-slate-100 rounded-full text-[9px] font-bold text-slate-500 uppercase tracking-widest">JavaScript</span>
+                                    <span
+                                        class="px-3 py-1 bg-slate-100 rounded-full text-[9px] font-bold text-slate-500 uppercase tracking-widest">Mobile/Web</span>
+                                </div>
+                            </div>
+
+                            <!-- Logic Tier -->
+                            <div class="tier-card p-8 bg-white border border-slate-200 rounded-[2.5rem] hover:shadow-2xl hover:-translate-y-2 transition-all group relative overflow-hidden"
+                                data-tier="logic">
+                                <div
+                                    class="absolute right-0 top-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                                    <span
+                                        class="material-symbols-outlined text-6xl text-primary">settings_suggest</span>
+                                </div>
+                                <h4 class="text-primary font-black uppercase text-[10px] tracking-[0.4em] mb-2">Capa 2
+                                </h4>
+                                <h3 class="text-2xl font-black text-secondary mb-4 uppercase italic">Logic Tier</h3>
+                                <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                                    El cerebro de la operación. Coordina la aplicación, procesa comandos, toma
+                                    decisiones lógicas y realiza cálculos complejos entre las capas circundantes.
+                                </p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span
+                                        class="px-3 py-1 bg-slate-100 rounded-full text-[9px] font-bold text-slate-500 uppercase tracking-widest">Python</span>
+                                    <span
+                                        class="px-3 py-1 bg-slate-100 rounded-full text-[9px] font-bold text-slate-500 uppercase tracking-widest">Java</span>
+                                    <span
+                                        class="px-3 py-1 bg-slate-100 rounded-full text-[9px] font-bold text-slate-500 uppercase tracking-widest">PHP</span>
+                                    <span
+                                        class="px-3 py-1 bg-slate-100 rounded-full text-[9px] font-bold text-slate-500 uppercase tracking-widest">.NET
+                                        / Rails</span>
+                                </div>
+                            </div>
+
+                            <!-- Data Tier -->
+                            <div class="tier-card p-8 bg-white border border-slate-200 rounded-[2.5rem] hover:shadow-2xl hover:-translate-y-2 transition-all group relative overflow-hidden"
+                                data-tier="data">
+                                <div
+                                    class="absolute right-0 top-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                                    <span class="material-symbols-outlined text-6xl text-primary">database</span>
+                                </div>
+                                <h4 class="text-primary font-black uppercase text-[10px] tracking-[0.4em] mb-2">Capa 3
+                                </h4>
+                                <h3 class="text-2xl font-black text-secondary mb-4 uppercase italic">Data Tier</h3>
+                                <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                                    Donde reside la persistencia. La información se almacena y recupera de bases de
+                                    datos o sistemas de archivos para ser procesada por la capa lógica.
+                                </p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span
+                                        class="px-3 py-1 bg-slate-100 rounded-full text-[9px] font-bold text-slate-500 uppercase tracking-widest">MySQL</span>
+                                    <span
+                                        class="px-3 py-1 bg-slate-100 rounded-full text-[9px] font-bold text-slate-500 uppercase tracking-widest">PostgreSQL</span>
+                                    <span
+                                        class="px-3 py-1 bg-slate-100 rounded-full text-[9px] font-bold text-slate-500 uppercase tracking-widest">Oracle</span>
+                                    <span
+                                        class="px-3 py-1 bg-slate-100 rounded-full text-[9px] font-bold text-slate-500 uppercase tracking-widest">SQL
+                                        Server</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Imagen Conceptual -->
+                        <div class="relative group">
+                            <div
+                                class="absolute -inset-4 bg-primary/10 blur-[50px] rounded-full opacity-50 group-hover:opacity-100 transition-opacity">
+                            </div>
+                            <div
+                                class="relative bg-secondary p-4 rounded-[4rem] shadow-2xl overflow-hidden border border-white/5">
+                                <img src="images/3rd-tier.png" alt="3-Tier Architecture Flow"
+                                    class="w-full h-auto rounded-[3.5rem] transition-transform duration-700 group-hover:scale-110">
+                                <div
+                                    class="absolute inset-x-0 bottom-0 p-12 bg-gradient-to-t from-secondary to-transparent">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-12 h-1 bg-primary"></div>
+                                        <p class="text-white text-xs font-black uppercase tracking-[0.3em] italic">Full
+                                            Stack Flow Visualization</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Desarrollador -->
+            <section
+                class="relative py-32 px-12 md:px-24 min-h-screen flex flex-col justify-center overflow-hidden bg-gradient-to-tr from-surface to-secondary border-y border-white/5"
+                id="developer">
+                <div
+                    class="absolute font-display font-black text-[18rem] leading-none select-none pointer-events-none opacity-[0.05] z-0 -bottom-20 -right-20 text-white opacity-10">
+                    CODE</div>
+                <div class="max-w-6xl mx-auto relative z-10 w-full scroll-reveal">
+                    <h2 class="font-display text-7xl font-black mb-20 leading-none text-white italic uppercase">
+                        Desarrollador</h2>
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <div
+                            class="p-12 bg-white-soft text-secondary rounded-[3rem] shadow-2xl transition-transform hover:-translate-y-4">
+                            <h3 class="text-3xl font-black mb-6">Frontend</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed mb-8">El arquitecto de la
+                                experiencia visual. Domina HTML, CSS y frameworks modernos.</p>
+                            <span class="material-symbols-outlined text-primary text-5xl">terminal</span>
+                        </div>
+                        <div
+                            class="p-12 bg-surface text-white rounded-[3rem] shadow-2xl transition-transform hover:-translate-y-4 scale-105 z-10 border-2 border-white/10">
+                            <h3 class="text-3xl font-black mb-6 text-accent">Fullstack</h3>
+                            <p class="text-slate-400 text-sm leading-relaxed mb-8">El orquestador total. Capaz
+                                de navegar entre la lógica del servidor y la interfaz.</p>
+                            <span class="material-symbols-outlined text-white text-5xl">deployed_code</span>
+                        </div>
+                        <div
+                            class="p-12 bg-white-soft text-secondary rounded-[3rem] shadow-2xl transition-transform hover:-translate-y-4">
+                            <h3 class="text-3xl font-black mb-6">Backend</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed mb-8">El guardián de la lógica y
+                                los datos. Especialista en seguridad y APIs.</p>
+                            <span class="material-symbols-outlined text-primary text-5xl">database</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- World Wide Web: Governance & Standards -->
+            <section
+                class="relative py-32 px-12 md:px-24 min-h-screen flex flex-col justify-center overflow-hidden bg-white text-slate-900"
+                id="www">
+                <!-- Background Mesh -->
+                <div class="absolute inset-0 opacity-[0.03] pointer-events-none select-none overflow-hidden">
+                    <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                        <path d="M0 0 L100 100 M0 100 L100 0" stroke="currentColor" stroke-width="0.1" fill="none" />
+                    </svg>
+                </div>
+
+                <div class="max-w-7xl mx-auto relative z-10 w-full scroll-reveal">
+                    <div class="text-center mb-24">
+                        <span class="text-primary font-black uppercase text-xs tracking-[0.5em] mb-4 block">Ecosistema
+                            Global</span>
+                        <h2
+                            class="font-display text-5xl md:text-8xl font-black text-secondary italic uppercase leading-none mb-8">
+                            World Wide <span class="text-primary">Web</span></h2>
+                        <p class="text-slate-500 max-w-3xl mx-auto text-xl font-light leading-relaxed">
+                            No es solo una red de documentos; es un ecosistema regido por estándares que garantizan una
+                            web abierta, accesible y universal.
+                        </p>
+                    </div>
+
+                    <div class="grid lg:grid-cols-2 gap-20 items-start">
+                        <!-- Innovative Governance Cards -->
+                        <div class="grid gap-8">
+                            <!-- Internet Society -->
+                            <div class="www-governance-card p-10 bg-slate-50 border border-slate-100 rounded-[3.5rem] hover:shadow-xl transition-all group cursor-pointer"
+                                data-gov="isoc">
+                                <div class="flex items-center gap-6 mb-8">
+                                    <div
+                                        class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm border border-slate-100 group-hover:scale-110 transition-transform">
+                                        <span class="material-symbols-outlined text-3xl text-primary">public</span>
+                                    </div>
+                                    <h3 class="text-3xl font-black text-secondary uppercase italic">Internet Society
+                                    </h3>
+                                </div>
+                                <div class="space-y-6">
+                                    <p class="text-slate-600 text-sm leading-relaxed">Liderazgo profesional para
+                                        orientar el futuro de Internet a través de estándares y políticas abiertas.</p>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div class="p-4 bg-white rounded-3xl border border-slate-100 shadow-sm">
+                                            <span
+                                                class="text-[10px] font-black text-primary uppercase block mb-1 acronym"
+                                                data-acro="IETF">IETF</span>
+                                            <p
+                                                class="text-[10px] text-slate-500 font-bold uppercase tracking-widest italic">
+                                                Internet Engineering Task Force</p>
+                                        </div>
+                                        <div class="p-4 bg-white rounded-3xl border border-slate-100 shadow-sm">
+                                            <span
+                                                class="text-[10px] font-black text-primary uppercase block mb-1 acronym"
+                                                data-acro="IAB">IAB</span>
+                                            <p
+                                                class="text-[10px] text-slate-500 font-bold uppercase tracking-widest italic">
+                                                Internet Architecture Board</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ICANN -->
+                            <div class="www-governance-card p-10 bg-slate-50 border border-slate-100 rounded-[3.5rem] hover:shadow-xl transition-all group cursor-pointer"
+                                data-gov="icann">
+                                <div class="flex items-center gap-6 mb-8">
+                                    <div
+                                        class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm border border-slate-100 group-hover:scale-110 transition-transform">
+                                        <span class="material-symbols-outlined text-3xl text-primary">dns</span>
+                                    </div>
+                                    <h3 class="text-3xl font-black text-secondary uppercase italic">ICANN</h3>
+                                </div>
+                                <p class="text-slate-600 text-sm leading-relaxed mb-8">Corporación para la Asignación de
+                                    Nombres y Números. El registrador maestro del ecosistema digital.</p>
+                                <ul class="grid grid-cols-2 gap-y-3">
+                                    <li
+                                        class="flex items-center gap-2 text-[10px] font-black italic uppercase text-slate-400 group-hover:text-primary transition-colors">
+                                        <span class="w-4 h-[1px] bg-slate-200 group-hover:bg-primary"></span> Nombres de
+                                        Dominio
+                                    </li>
+                                    <li
+                                        class="flex items-center gap-2 text-[10px] font-black italic uppercase text-slate-400 group-hover:text-primary transition-colors">
+                                        <span class="w-4 h-[1px] bg-slate-200 group-hover:bg-primary"></span>
+                                        Direcciones IP
+                                    </li>
+                                    <li
+                                        class="flex items-center gap-2 text-[10px] font-black italic uppercase text-slate-400 group-hover:text-primary transition-colors">
+                                        <span class="w-4 h-[1px] bg-slate-200 group-hover:bg-primary"></span> Parámetros
+                                        Protocolo
+                                    </li>
+                                    <li
+                                        class="flex items-center gap-2 text-[10px] font-black italic uppercase text-slate-400 group-hover:text-primary transition-colors">
+                                        <span class="w-4 h-[1px] bg-slate-200 group-hover:bg-primary"></span> Números de
+                                        Puerto
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- W3C -->
+                            <div class="www-governance-card p-10 bg-slate-50 border border-slate-100 rounded-[3.5rem] hover:shadow-xl transition-all group cursor-pointer"
+                                data-gov="w3c">
+                                <div class="flex items-center gap-6 mb-8">
+                                    <div
+                                        class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm border border-slate-100 group-hover:scale-110 transition-transform">
+                                        <span class="material-symbols-outlined text-3xl text-primary">html</span>
+                                    </div>
+                                    <h3 class="text-3xl font-black text-secondary uppercase italic">W3C Consortium</h3>
+                                </div>
+                                <div class="space-y-6">
+                                    <p class="text-slate-600 text-sm leading-relaxed">El arquitecto de los protocolos.
+                                        Desarrolla recomendaciones para estandarizar las tecnologías web.</p>
+                                    <div class="flex gap-4">
+                                        <div class="flex-1 p-3 border-l-2 border-primary bg-white">
+                                            <span
+                                                class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Iniciativa</span>
+                                            <p class="text-xs font-black text-secondary">WAI: Web Accessibility
+                                                Initiative</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Central Visual Element -->
+                        <div class="sticky top-32 space-y-8">
+                            <div class="relative group">
+                                <div
+                                    class="absolute -inset-1 bg-gradient-to-r from-primary to-secondary blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200">
+                                </div>
+                                <div class="relative bg-secondary p-1 rounded-[4.5rem] shadow-2xl overflow-hidden">
+                                    <img src="images/web-governance.png" alt="Digital Web Governance Concept"
+                                        class="w-full h-auto rounded-[4rem] group-hover:scale-105 transition-transform duration-700">
+                                </div>
+                            </div>
+
+                            <!-- Innovation Highlight -->
+                            <div class="p-12 bg-secondary rounded-[4rem] text-white overflow-hidden relative group">
+                                <div
+                                    class="absolute top-0 right-0 p-8 opacity-10 scale-150 rotate-12 group-hover:rotate-0 transition-transform duration-700">
+                                    <span class="material-symbols-outlined text-9xl">verified</span>
+                                </div>
+                                <h5 class="text-primary font-black uppercase text-[10px] tracking-[0.4em] mb-4">
+                                    Estándares en Cifras</h5>
+                                <div class="grid grid-cols-2 gap-8 relative z-10">
+                                    <div>
+                                        <div class="text-4xl font-black mb-1 italic">9.5K+</div>
+                                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest italic">
+                                            RFCs Publicados por IETF</p>
+                                    </div>
+                                    <div>
+                                        <div class="text-4xl font-black mb-1 italic">30+</div>
+                                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest italic">
+                                            Años estandarizando (W3C)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- HTTP: El Protocolo de Transferencia -->
+            <section
+                class="relative py-32 px-12 md:px-24 min-h-screen flex flex-col justify-center overflow-hidden bg-surface text-white border-y border-white/5"
+                id="http">
+                <!-- Background Glow -->
+                <div
+                    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[80%] bg-primary/5 blur-[120px] rounded-full pointer-events-none">
+                </div>
+
+                <div class="max-w-7xl mx-auto relative z-10 w-full scroll-reveal">
+                    <div class="text-center mb-20">
+                        <h2
+                            class="font-display text-5xl md:text-8xl font-black text-white italic uppercase leading-none mb-6">
+                            Protocolo <span class="text-primary italic">HTTP</span></h2>
+                        <div
+                            class="flex justify-center flex-wrap gap-4 text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 mb-8">
+                            <span>Hypertext Transfer Protocol</span>
+                            <span class="text-primary">•</span>
+                            <span><span class="acronym" data-acro="RFC">RFC</span> 2616</span>
+                            <span class="text-primary">•</span>
+                            <span>Version 1.1</span>
+                            <span class="text-primary">•</span>
+                            <span>Port 80</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-24">
+                        <!-- Phase 1: The Request Lifecycle -->
+                        <div class="grid lg:grid-cols-12 gap-12 items-start">
+                            <div class="lg:col-span-4 space-y-6">
+                                <div
+                                    class="inline-flex items-center gap-3 px-4 py-1 bg-primary/10 rounded-full border border-primary/20 text-[10px] font-black text-primary uppercase tracking-widest">
+                                    Fase 01: Petición
+                                </div>
+                                <h3 class="text-4xl font-black italic uppercase italic">El Ciclo de <span
+                                        class="text-primary">Comunicación</span></h3>
+                                <p class="text-slate-400 leading-relaxed italic text-lg">
+                                    HTTP funciona mediante un modelo <span
+                                        class="text-white font-bold">Cliente-Servidor</span>. Todo comienza cuando el
+                                    usuario solicita un recurso, desencadenando un flujo de datos bidireccional.
+                                </p>
+
+                                <!-- Tech Snippet (Header Inspector) - Relocated for context -->
+                                <div
+                                    class="bg-black/40 rounded-[2.5rem] border border-white/5 overflow-hidden font-mono text-[10px] leading-relaxed group shadow-2xl mt-8">
+                                    <div
+                                        class="px-5 py-3 border-b border-white/5 bg-white/5 flex justify-between items-center">
+                                        <span class="text-[8px] font-bold text-slate-500 uppercase tracking-widest">HTTP
+                                            HEADER INSPECTOR</span>
+                                    </div>
+                                    <div class="p-6 space-y-1">
+                                        <div class="text-green-400 font-bold mb-2">HTTP/1.1 200 OK</div>
+                                        <div class="text-slate-500"><span class="text-white">Content-Type:</span>
+                                            text/html</div>
+                                        <div class="text-slate-500"><span class="text-white">Etag:</span>
+                                            "3f80f-1b6-3e1cb03b"</div>
+                                        <div class="mt-2 text-primary opacity-50 animate-pulse">// Streaming data...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="lg:col-span-8 space-y-12">
+                                <!-- Interactive Flow Visualization (Enhanced) -->
+                                <div
+                                    class="relative p-12 bg-white/5 border border-white/10 rounded-[4rem] overflow-hidden group shadow-inner">
+                                    <div
+                                        class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-50">
+                                    </div>
+                                    <div class="flex justify-between items-center relative z-10 gap-4">
+                                        <div class="text-center">
+                                            <div
+                                                class="w-24 h-24 bg-primary/10 rounded-[2rem] flex items-center justify-center mb-4 border border-primary/20 group-hover:rotate-12 transition-transform duration-500">
+                                                <span
+                                                    class="material-symbols-outlined text-4xl text-primary">laptop_mac</span>
+                                            </div>
+                                            <span
+                                                class="text-[10px] font-black uppercase tracking-widest text-slate-400">Cliente
+                                                (Browser)</span>
+                                        </div>
+
+                                        <div class="flex-1 relative px-4">
+                                            <!-- Data Stream Animation -->
+                                            <div
+                                                class="h-[3px] w-full bg-white/5 relative rounded-full overflow-hidden">
+                                                <div
+                                                    class="absolute inset-0 bg-gradient-to-r from-transparent via-primary to-transparent animate-flow-right w-1/2">
+                                                </div>
+                                            </div>
+                                            <div class="flex justify-between mt-4">
+                                                <div class="text-[8px] font-black uppercase text-primary italic">Request
+                                                </div>
+                                                <div class="text-[8px] font-black uppercase text-slate-500 italic">
+                                                    Response</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="text-center">
+                                            <div
+                                                class="w-24 h-24 bg-white/5 rounded-[2rem] flex items-center justify-center mb-4 border border-white/10 group-hover:-rotate-12 transition-transform duration-500">
+                                                <span
+                                                    class="material-symbols-outlined text-4xl text-slate-500">dns</span>
+                                            </div>
+                                            <span
+                                                class="text-[10px] font-black uppercase tracking-widest text-slate-400">Servidor
+                                                (Host)</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Visual Hero -->
+                                <div
+                                    class="relative group overflow-hidden rounded-[3rem] border border-white/5 shadow-2xl">
+                                    <img src="images/http-concept.png" alt="Innovative HTTP Protocol Visualization"
+                                        class="w-full h-auto transition-transform duration-1000 group-hover:scale-105">
+                                    <div
+                                        class="absolute inset-0 bg-gradient-to-t from-secondary via-transparent to-transparent opacity-80">
+                                    </div>
+                                    <div class="absolute bottom-8 left-8">
+                                        <h4 class="text-2xl font-black text-white uppercase italic">Hypertext Evolution
+                                        </h4>
+                                        <p class="text-[10px] text-primary font-bold uppercase tracking-widest mt-1">
+                                            Data Transfer Layer</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Phase 2: Client vs Server Roles -->
+                        <div class="pt-12">
+                            <div class="text-center mb-16">
+                                <h3 class="text-3xl font-black italic uppercase italic">Actores de la <span
+                                        class="text-primary">Comunicación</span></h3>
+                                <p class="text-slate-500 mt-4 italic max-w-2xl mx-auto">Dos roles distintos trabajando
+                                    en armonía para entregar la experiencia web.</p>
+                            </div>
+
+                            <div class="grid lg:grid-cols-2 gap-8">
+                                <!-- Client Card -->
+                                <div class="bg-white/5 border border-white/10 rounded-[3.5rem] p-12 hover:border-primary/50 transition-all duration-500 group tier-card relative overflow-hidden"
+                                    data-tier="client">
+                                    <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl -mr-16 -mt-16">
+                                    </div>
+                                    <div class="flex items-center gap-6 mb-10 relative z-10">
+                                        <div
+                                            class="w-20 h-20 bg-primary/20 rounded-[2rem] flex items-center justify-center text-primary border border-primary/20 shadow-lg shadow-primary/10">
+                                            <span class="material-symbols-outlined text-4xl">desktop_windows</span>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-3xl font-black uppercase italic">Client Web</h4>
+                                            <span
+                                                class="text-[11px] text-slate-500 font-bold uppercase tracking-widest">Modulo
+                                                de Usuario</span>
+                                        </div>
+                                    </div>
+                                    <ul class="space-y-6 relative z-10">
+                                        <li
+                                            class="flex items-start gap-4 p-4 rounded-2xl hover:bg-white/5 transition-colors">
+                                            <span class="w-1.5 h-1.5 bg-primary rounded-full mt-2 shrink-0"></span>
+                                            <span class="text-slate-400 italic text-sm">Se conecta a Internet bajo
+                                                demanda para solicitar recursos.</span>
+                                        </li>
+                                        <li
+                                            class="flex items-start gap-4 p-4 rounded-2xl hover:bg-white/5 transition-colors">
+                                            <span class="w-1.5 h-1.5 bg-primary rounded-full mt-2 shrink-0"></span>
+                                            <span class="text-slate-400 italic text-sm">Ejecuta software de navegación
+                                                moderno (Chrome, Firefox, Safari).</span>
+                                        </li>
+                                        <li
+                                            class="flex items-start gap-4 p-4 rounded-2xl hover:bg-white/5 transition-colors">
+                                            <span class="w-1.5 h-1.5 bg-primary rounded-full mt-2 shrink-0"></span>
+                                            <span class="text-slate-400 italic text-sm">Inicia peticiones <span
+                                                    class="text-primary font-bold">GET/POST</span> al servidor.</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <!-- Server Card -->
+                                <div class="bg-white/5 border border-white/10 rounded-[3.5rem] p-12 hover:border-primary/50 transition-all duration-500 group tier-card relative overflow-hidden"
+                                    data-tier="server">
+                                    <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 blur-3xl -mr-16 -mt-16">
+                                    </div>
+                                    <div class="flex items-center gap-6 mb-10 relative z-10">
+                                        <div
+                                            class="w-20 h-20 bg-white/5 rounded-[2rem] flex items-center justify-center text-slate-400 border border-white/10 shadow-lg">
+                                            <span class="material-symbols-outlined text-4xl">storage</span>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-3xl font-black uppercase italic">Server Web</h4>
+                                            <span
+                                                class="text-[11px] text-slate-500 font-bold uppercase tracking-widest">Modulo
+                                                de Host</span>
+                                        </div>
+                                    </div>
+                                    <ul class="space-y-6 relative z-10">
+                                        <li
+                                            class="flex items-start gap-4 p-4 rounded-2xl hover:bg-white/5 transition-colors">
+                                            <span class="w-1.5 h-1.5 bg-white/20 rounded-full mt-2 shrink-0"></span>
+                                            <span class="text-slate-400 italic text-sm">Conexión ininterrumpida de alta
+                                                velocidad (24/7/365).</span>
+                                        </li>
+                                        <li
+                                            class="flex items-start gap-4 p-4 rounded-2xl hover:bg-white/5 transition-colors">
+                                            <span class="w-1.5 h-1.5 bg-white/20 rounded-full mt-2 shrink-0"></span>
+                                            <span class="text-slate-400 italic text-sm">Ejecuta servicios robustos como
+                                                <span class="text-white">Apache HTTP Server</span> o IIS.</span>
+                                        </li>
+                                        <li
+                                            class="flex items-start gap-4 p-4 rounded-2xl hover:bg-white/5 transition-colors">
+                                            <span class="w-1.5 h-1.5 bg-white/20 rounded-full mt-2 shrink-0"></span>
+                                            <span class="text-slate-400 italic text-sm">Maneja peticiones masivas y
+                                                transmite archivos multimedia.</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Phase 3: The Payload (MIME) -->
+                        <div
+                            class="mt-12 p-12 bg-primary/5 border border-primary/20 rounded-[4rem] relative overflow-hidden group">
+                            <div
+                                class="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_top_right,rgba(196,30,58,0.1),transparent)]">
+                            </div>
+                            <div class="grid lg:grid-cols-2 gap-16 items-center relative z-10">
+                                <div class="space-y-8">
+                                    <div
+                                        class="inline-block px-4 py-1 bg-primary text-[10px] font-black uppercase tracking-widest rounded-full text-white">
+                                        Estándar de Contenido
+                                    </div>
+                                    <h3 class="text-5xl font-black italic uppercase leading-none">Multipropósito: <span
+                                            class="text-primary">MIME</span></h3>
+                                    <p class="text-slate-400 leading-relaxed italic text-xl">
+                                        Sin <span class="acronym" data-acro="MIME">MIME</span>, tu navegador no sabría
+                                        si está recibiendo una imagen, un video o un documento. Es el intérprete
+                                        universal de la web para archivos heterogéneos.
+                                    </p>
+                                    <div class="flex flex-wrap gap-4">
+                                        <div
+                                            class="px-6 py-3 bg-black/40 rounded-2xl border border-white/5 flex items-center gap-3">
+                                            <span
+                                                class="material-symbols-outlined text-primary text-sm">video_library</span>
+                                            <span class="text-xs font-bold uppercase tracking-widest">Multimedia</span>
+                                        </div>
+                                        <div
+                                            class="px-6 py-3 bg-black/40 rounded-2xl border border-white/5 flex items-center gap-3">
+                                            <span class="material-symbols-outlined text-primary text-sm">security</span>
+                                            <span class="text-xs font-bold uppercase tracking-widest">Seguridad</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="relative">
+                                    <div
+                                        class="absolute -inset-4 bg-primary/20 blur-3xl opacity-0 group-hover:opacity-60 transition-opacity duration-700">
+                                    </div>
+                                    <img src="images/client-server-mime.png" alt="MIME Protocol Visualization"
+                                        class="rounded-[3rem] shadow-2xl relative z-10 transition-transform duration-700 group-hover:scale-105 group-hover:-rotate-1">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </section>
+
+            <!-- Ecosystem Section -->
+            <section
+                class="relative py-32 px-12 md:px-24 min-h-screen flex flex-col justify-center overflow-hidden bg-white text-slate-900 pb-0"
+                id="web-ecosystem">
+                <div class="absolute inset-0 opacity-[0.02] pointer-events-none select-none">
+                    <div
+                        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[40rem] font-black text-slate-900 leading-none">
+                        WEB</div>
+                </div>
+
+                <div class="max-w-7xl mx-auto relative z-10 w-full scroll-reveal">
+                    <div class="grid lg:grid-cols-2 gap-20 items-center mb-32">
+                        <div class="space-y-10">
+                            <div>
+                                <span
+                                    class="text-primary font-black uppercase text-xs tracking-[0.5em] mb-4 block">Visión
+                                    de Futuro</span>
+                                <h2
+                                    class="font-display text-6xl md:text-8xl font-black text-secondary leading-[0.9] uppercase italic">
+                                    El Nuevo <span class="text-primary">Ecosistema</span> Digital
+                                </h2>
+                            </div>
+                            <p class="text-slate-500 text-xl leading-relaxed font-light max-w-xl">
+                                La web ha evolucionado de simples páginas a un ecosistema vivo de dispositivos
+                                interconectados. Comprender esta red es dominar la infraestructura del mañana.
+                            </p>
+
+                            <!-- Device Spectrum Grid -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <div
+                                    class="p-6 bg-slate-50 rounded-[2.5rem] border border-slate-100 group hover:bg-secondary hover:border-secondary transition-all duration-500 cursor-help shadow-sm">
+                                    <span
+                                        class="material-symbols-outlined text-primary mb-3 text-3xl group-hover:text-white">smartphone</span>
+                                    <h5 class="text-secondary font-black text-xs uppercase group-hover:text-white">
+                                        Mobile Web</h5>
+                                    <p
+                                        class="text-[10px] text-slate-400 group-hover:text-slate-300 italic mt-1 leading-relaxed">
+                                        Pwa's y apps híbridas dominan el tráfico.</p>
+                                </div>
+                                <div
+                                    class="p-6 bg-slate-50 rounded-[2.5rem] border border-slate-100 group hover:bg-secondary hover:border-secondary transition-all duration-500 cursor-help shadow-sm">
+                                    <span
+                                        class="material-symbols-outlined text-primary mb-3 text-3xl group-hover:text-white">language</span>
+                                    <h5 class="text-secondary font-black text-xs uppercase group-hover:text-white">
+                                        Cloud/IoT</h5>
+                                    <p
+                                        class="text-[10px] text-slate-400 group-hover:text-slate-300 italic mt-1 leading-relaxed">
+                                        Miles de millones de sensores reportando datos.</p>
+                                </div>
+                                <div
+                                    class="p-6 bg-slate-50 rounded-[2.5rem] border border-slate-100 group hover:bg-secondary hover:border-secondary transition-all duration-500 cursor-help shadow-sm">
+                                    <span
+                                        class="material-symbols-outlined text-primary mb-3 text-3xl group-hover:text-white">psychology</span>
+                                    <h5 class="text-secondary font-black text-xs uppercase group-hover:text-white">Smart
+                                        Agents</h5>
+                                    <p
+                                        class="text-[10px] text-slate-400 group-hover:text-slate-300 italic mt-1 leading-relaxed">
+                                        IA navegando y realizando acciones por humanos.</p>
+                                </div>
+                                <div
+                                    class="p-6 bg-slate-50 rounded-[2.5rem] border border-slate-100 group hover:bg-secondary hover:border-secondary transition-all duration-500 cursor-help shadow-sm">
+                                    <span
+                                        class="material-symbols-outlined text-primary mb-3 text-3xl group-hover:text-white">laptop_mac</span>
+                                    <h5 class="text-secondary font-black text-xs uppercase group-hover:text-white">
+                                        Advanced Dev</h5>
+                                    <p
+                                        class="text-[10px] text-slate-400 group-hover:text-slate-300 italic mt-1 leading-relaxed">
+                                        Entornos de computación de alto rendimiento.</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-8 pt-6">
+                                <button id="final-tour-btn"
+                                    class="relative group h-20 px-12 bg-secondary rounded-full overflow-hidden shadow-2xl transition-all hover:scale-105 active:scale-95">
+                                    <div
+                                        class="absolute inset-0 bg-primary translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                                    </div>
+                                    <span
+                                        class="relative z-10 text-white font-black text-xs uppercase tracking-[0.3em] flex items-center gap-4">
+                                        Finalizar Recorrido
+                                        <span
+                                            class="material-symbols-outlined group-hover:translate-x-2 transition-transform">celebration</span>
+                                    </span>
+                                </button>
+                                <div
+                                    class="text-[10px] font-black uppercase text-slate-300 tracking-widest leading-relaxed">
+                                    Cursos de Ingeniería<br>UFPS · 2026
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="relative">
+                            <!-- Premium 3D Visual -->
+                            <div class="relative group">
+                                <div class="absolute -inset-10 bg-primary/10 blur-[120px] rounded-full opacity-60">
+                                </div>
+                                <div
+                                    class="relative rounded-[5rem] overflow-hidden border-[12px] border-white shadow-3xl bg-white">
+                                    <img src="images/ecosystem-3d.png" alt="Global Web Ecosystem 3D"
+                                        class="w-full h-auto transition-transform duration-1000 group-hover:scale-110">
+                                    <!-- Dynamic Badge -->
+                                    <div
+                                        class="absolute top-12 left-12 p-6 bg-secondary/90 backdrop-blur-xl rounded-[2.5rem] text-white space-y-2 border border-white/20">
+                                        <div
+                                            class="text-[9px] font-black uppercase tracking-widest opacity-60 text-primary">
+                                            Status Global</div>
+                                        <div class="text-2xl font-black italic uppercase leading-none">Interconectado
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <footer
+                        class="py-16 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-12">
+                        <div class="flex items-center gap-6">
+                            <div
+                                class="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-white font-black text-xl">
+                                U</div>
+                            <div>
+                                <p class="text-secondary font-black text-xs uppercase tracking-widest">UFPS
+                                    Cúcuta</p>
+                                <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">
+                                    Ingeniería de
+                                    Sistemas</p>
+                            </div>
+                        </div>
+                        <div class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em]">
+                            © 2026 · Educación Digital · Web Fundamentals
+                        </div>
+                        <div class="flex gap-4">
+                            <button id="footer-share-btn"
+                                class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all shadow-sm">
+                                <span class="material-symbols-outlined">share</span>
+                            </button>
+                            <div class="relative group/download">
+                                <button id="footer-download-btn"
+                                    class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all shadow-sm">
+                                    <span class="material-symbols-outlined">description</span>
+                                </button>
+                                <!-- Download Menu -->
+                                <div id="download-menu"
+                                    class="absolute bottom-full right-0 mb-4 bg-secondary border border-white/10 rounded-2xl shadow-2xl overflow-hidden opacity-0 invisible group-hover/download:visible group-hover/download:opacity-100 transition-all duration-300 w-40 z-[100]">
+                                    <button id="download-txt"
+                                        class="w-full px-6 py-3 text-left text-xs font-bold text-slate-300 hover:bg-primary hover:text-white transition-colors flex items-center gap-3">
+                                        <span class="material-symbols-outlined text-sm">article</span>
+                                        Formato .TXT
+                                    </button>
+                                    <div class="h-px bg-white/5 mx-2"></div>
+                                    <button id="download-pdf"
+                                        class="w-full px-6 py-3 text-left text-xs font-bold text-slate-300 hover:bg-primary hover:text-white transition-colors flex items-center gap-3">
+                                        <span class="material-symbols-outlined text-sm">picture_as_pdf</span>
+                                        Formato .PDF
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script type="text/javascript"
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
